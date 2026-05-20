@@ -139,21 +139,21 @@ export default function WandOS() {
 
   return (
     <div style={{
-      maxWidth:430, margin:"0 auto", minHeight:"100vh", height:"100%",
+      maxWidth:430, margin:"0 auto",
       background:"#0a0a0f", color:"#f1f5f9",
       fontFamily:"-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif",
-      display:"flex", flexDirection:"column", position:"relative", overflow:"hidden"
+      display:"flex", flexDirection:"column", position:"fixed", top:0, left:"50%", transform:"translateX(-50%)", width:"100%", height:"100dvh"
     }}>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 
       {/* STATUS BAR AREA */}
-      <div style={{height:8,background:"transparent",flexShrink:0}}/>
+      <div style={{height:"env(safe-area-inset-top,8px)",background:"transparent",flexShrink:0}}/>
 
       {/* HEADER */}
       <Header now={now} progress={progress} done={done} current={current} nextItem={nextItem}/>
 
       {/* CONTENT */}
-      <div style={{flex:1,overflowY:"auto",overflowX:"hidden",WebkitOverflowScrolling:"touch",paddingBottom:90}}>
+      <div style={{flex:1,overflowY:"scroll",overflowX:"hidden",WebkitOverflowScrolling:"touch",paddingBottom:100,minHeight:0}}>
         {tab==="rotina"   && <RotinaTab   checked={checked} upDay={upDay} toast={showToast}/>}
         {tab==="tarefas"  && <TarefasTab  tasks={tasks} upDay={upDay} toast={showToast}/>}
         {tab==="metas"    && <MetasTab    metas={metas} upRoot={upRoot} toast={showToast}/>}
@@ -180,6 +180,8 @@ export default function WandOS() {
 
       <style>{`
         @keyframes slideDown{from{opacity:0;transform:translateX(-50%) translateY(-8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+        html,body{height:100%;overflow:hidden;position:fixed;width:100%}
+        body{overscroll-behavior:none}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
         @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
         @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
@@ -915,7 +917,7 @@ function IATab({chat,upRoot,tasks,checked,progress,nextItem,metas}) {
         <button onClick={()=>upRoot({chat:[]})} style={{marginLeft:"auto",fontSize:10,background:"none",boxShadow:"inset 0 0 0 1px rgba(255,255,255,.04)",color:"#334155",borderRadius:6,padding:"3px 8px",cursor:"pointer"}}>Limpar</button>
       </div>
 
-      <div style={{flex:1,overflowY:"auto",WebkitOverflowScrolling:"touch"}}>
+      <div style={{flex:1,overflowY:"scroll",WebkitOverflowScrolling:"touch",minHeight:0}}>
         {chat.length===0&&(
           <div style={{textAlign:"center",padding:"32px 16px"}}>
             <div style={{fontSize:40,marginBottom:12}}>✧</div>
