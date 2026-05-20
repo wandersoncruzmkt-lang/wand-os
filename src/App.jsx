@@ -245,8 +245,8 @@ function Header({now,progress,done,current,nextItem}) {
       {(current||nextItem) && (
         <div style={{
           display:"flex",alignItems:"center",gap:8,
-          background:"rgba(255,255,255,.04)",
-          border:"1px solid rgba(255,255,255,.07)",
+          background:"rgba(255,255,255,.03)",
+          boxShadow:"inset 0 0 0 1px rgba(255,255,255,.04)",
           borderRadius:10,padding:"8px 12px"
         }}>
           <div style={{width:7,height:7,borderRadius:99,background:tagColor,flexShrink:0,animation:"pulse 2s infinite"}}/>
@@ -268,7 +268,7 @@ function BottomNav({tab,setTab}) {
       width:"100%",maxWidth:430,
       background:"rgba(10,10,15,.92)",
       backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",
-      borderTop:"1px solid rgba(255,255,255,.07)",
+      borderTop:"1px solid rgba(255,255,255,.05)",
       padding:"8px 0 max(8px,env(safe-area-inset-bottom))",
       display:"flex",zIndex:100
     }}>
@@ -348,12 +348,13 @@ function RotinaTab({checked,upDay,toast}) {
             onClick={()=>toggle(item.id)}
             style={{
               display:"flex",gap:12,alignItems:"center",
-              background: isActive?"rgba(251,191,36,.06)": ck?"rgba(255,255,255,.02)":"rgba(255,255,255,.04)",
-              border:`1px solid ${isActive?"rgba(251,191,36,.25)":ck?"rgba(255,255,255,.04)":"rgba(255,255,255,.07)"}`,
-              borderLeft:`3px solid ${ck?"transparent":tc.c}`,
+              background: isActive?"rgba(251,191,36,.07)": ck?"#0f0f18":"#111827",
+              borderLeft:`3px solid ${ck?"#1e1e2e":tc.c}`,
+              borderTop:"none",borderRight:"none",borderBottom:"none",
               borderRadius:14,padding:"12px 14px",marginBottom:8,
               cursor:"pointer",opacity:ck?.5:1,
               transition:"all .2s",
+              boxShadow: isActive?`inset 0 0 0 1px rgba(251,191,36,.18)`:`inset 0 0 0 1px rgba(255,255,255,.03)`,
               animation:`fadeIn .3s ease ${idx*.03}s both`
             }}>
             {/* Time */}
@@ -439,7 +440,7 @@ function TarefasTab({tasks,upDay,toast}) {
 
       {/* Form */}
       {open&&(
-        <div style={{background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.08)",borderRadius:16,padding:14,marginBottom:14,animation:"fadeIn .2s ease"}}>
+        <div style={{background:"#111827",boxShadow:"inset 0 0 0 1px rgba(255,255,255,.04)",borderRadius:16,padding:14,marginBottom:14,animation:"fadeIn .2s ease"}}>
           <Inp value={form.title} onChange={e=>setForm(f=>({...f,title:e.target.value}))} onKeyDown={e=>e.key==="Enter"&&add()} placeholder="Título da tarefa..." autoFocus/>
           <Inp value={form.note} onChange={e=>setForm(f=>({...f,note:e.target.value}))} placeholder="Observação (opcional)..." style={{marginTop:8}}/>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginTop:8}}>
@@ -476,7 +477,7 @@ function TCard({t,onToggle,onRemove,idx}) {
   return(
     <div style={{
       display:"flex",gap:11,alignItems:"flex-start",
-      background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.07)",
+      background:"#111827",boxShadow:"inset 0 0 0 1px rgba(255,255,255,.04)",
       borderRadius:14,padding:"12px 13px",marginBottom:7,
       opacity:t.done?.45:1,animation:`fadeIn .25s ease ${idx*.04}s both`
     }}>
@@ -548,7 +549,7 @@ function MetasTab({metas,upRoot,toast}) {
               fontSize:11,padding:"6px 13px",borderRadius:20,whiteSpace:"nowrap",
               background:active?cc+"25":"rgba(255,255,255,.05)",
               color:active?cc:"#475569",
-              border:`1px solid ${active?cc+"55":"rgba(255,255,255,.08)"}`,
+              border:`1px solid ${active?cc+"55":"rgba(255,255,255,.05)"}`,
               cursor:"pointer",fontWeight:active?600:400,flexShrink:0,transition:"all .2s"
             }}>{c}</button>
           );
@@ -567,7 +568,7 @@ function MetasTab({metas,upRoot,toast}) {
       </button>
 
       {open&&(
-        <div style={{background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.08)",borderRadius:16,padding:14,marginBottom:14,animation:"fadeIn .2s ease"}}>
+        <div style={{background:"#111827",boxShadow:"inset 0 0 0 1px rgba(255,255,255,.04)",borderRadius:16,padding:14,marginBottom:14,animation:"fadeIn .2s ease"}}>
           <Inp value={form.title} onChange={e=>setForm(f=>({...f,title:e.target.value}))} placeholder="Meta (ex: R$15k/mês)" autoFocus/>
           <Inp value={form.desc} onChange={e=>setForm(f=>({...f,desc:e.target.value}))} placeholder="Como vai medir..." style={{marginTop:8}}/>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginTop:8}}>
@@ -618,8 +619,8 @@ function MCard({m,onProgress,onRemove,idx}) {
 
   return(
     <div style={{
-      background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.07)",
-      borderLeft:`3px solid ${m.done?"rgba(255,255,255,.07)":c}`,
+      background:"#111827",boxShadow:"inset 0 0 0 1px rgba(255,255,255,.04)",
+      borderLeft:`3px solid ${m.done?"rgba(255,255,255,.05)":c}`,
       borderRadius:14,padding:"14px",marginBottom:8,
       opacity:m.done?.5:1,animation:`fadeIn .25s ease ${idx*.04}s both`
     }}>
@@ -663,7 +664,7 @@ function MCard({m,onProgress,onRemove,idx}) {
             </div>
           ):(
             <button onClick={()=>{setVal(m.current);setEditing(true);}} style={{
-              fontSize:11,background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.1)",
+              fontSize:11,background:"rgba(255,255,255,.06)",boxShadow:"inset 0 0 0 1px rgba(255,255,255,.04)",
               color:"#94a3b8",borderRadius:8,padding:"5px 10px",cursor:"pointer"
             }}>↑ Atualizar</button>
           )
@@ -727,12 +728,12 @@ function NotasTab({notes,upRoot,tasks,upDay,toast}) {
 
   return(
     <div style={{padding:"16px 16px 0",animation:"fadeIn .3s ease"}}>
-      <div style={{background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.08)",borderRadius:16,padding:14,marginBottom:14}}>
+      <div style={{background:"#111827",boxShadow:"inset 0 0 0 1px rgba(255,255,255,.04)",borderRadius:16,padding:14,marginBottom:14}}>
         {/* Audio btn */}
         <button onClick={recording?stopRec:startRec} style={{
           width:"100%",padding:"10px",borderRadius:12,marginBottom:10,cursor:"pointer",
           background:recording?"rgba(239,68,68,.1)":"rgba(255,255,255,.05)",
-          border:`1px solid ${recording?"rgba(239,68,68,.4)":"rgba(255,255,255,.1)"}`,
+          border:`1px solid ${recording?"rgba(239,68,68,.4)":"rgba(255,255,255,.06)"}`,
           color:recording?"#f87171":"#94a3b8",fontSize:13,fontWeight:500,
           display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"all .2s"
         }}>
@@ -746,7 +747,7 @@ function NotasTab({notes,upRoot,tasks,upDay,toast}) {
           placeholder="Ideia, insight, lembrete... A IA converte em tarefa automaticamente."
           rows={3}
           style={{
-            width:"100%",background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.08)",
+            width:"100%",background:"#111827",boxShadow:"inset 0 0 0 1px rgba(255,255,255,.04)",
             borderRadius:10,padding:"10px 12px",color:"#e2e8f0",fontSize:16,resize:"vertical",outline:"none",
             fontFamily:"-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif",lineHeight:1.5
           }}/>
@@ -759,8 +760,8 @@ function NotasTab({notes,upRoot,tasks,upDay,toast}) {
       {notes.length===0&&<EmptyState icon="◈" text="Nenhuma anotação" sub="Escreva ou grave um áudio acima"/>}
       {notes.map((n,i)=>(
         <div key={n.id} style={{
-          background:"rgba(255,255,255,.04)",
-          border:`1px solid ${n.converted?"rgba(52,211,153,.15)":"rgba(255,255,255,.07)"}`,
+          background:"rgba(255,255,255,.03)",
+          border:`1px solid ${n.converted?"rgba(52,211,153,.15)":"rgba(255,255,255,.05)"}`,
           borderLeft:`3px solid ${n.converted?"#34d399":"#c084fc"}`,
           borderRadius:14,padding:"12px 13px",marginBottom:8,
           opacity:n.converted?.6:1,animation:`fadeIn .25s ease ${i*.04}s both`
@@ -813,7 +814,7 @@ function GraficosTab({checked,metas,tasks,history,today}) {
               <div key={d} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
                 <span style={{fontSize:9,color:isToday?"#fbbf24":"#334155",fontWeight:isToday?700:400}}>{pct||""}{pct?"%":""}</span>
                 <div style={{width:"100%",height:72,background:"rgba(255,255,255,.05)",borderRadius:8,display:"flex",alignItems:"flex-end",overflow:"hidden",border:isToday?"1px solid rgba(251,191,36,.3)":"1px solid transparent"}}>
-                  <div style={{width:"100%",height:`${Math.max(pct,3)}%`,background:isToday?"#fbbf24":pct>=80?"#34d399":pct>=40?"#c084fc":"rgba(255,255,255,.1)",borderRadius:6,transition:"height .5s ease"}}/>
+                  <div style={{width:"100%",height:`${Math.max(pct,3)}%`,background:isToday?"#fbbf24":pct>=80?"#34d399":pct>=40?"#c084fc":"rgba(255,255,255,.06)",borderRadius:6,transition:"height .5s ease"}}/>
                 </div>
                 <span style={{fontSize:9,color:isToday?"#fbbf24":"#475569",textTransform:"capitalize"}}>{lbl}</span>
               </div>
@@ -911,7 +912,7 @@ function IATab({chat,upRoot,tasks,checked,progress,nextItem,metas}) {
       <div style={{display:"flex",alignItems:"center",gap:6,padding:"10px 0",borderBottom:"1px solid rgba(255,255,255,.06)",marginBottom:8,flexShrink:0}}>
         <div style={{width:7,height:7,borderRadius:99,background:"#34d399",animation:"pulse 2s infinite"}}/>
         <span style={{fontSize:11,color:"#475569"}}>Claude Sonnet 4 · Anthropic</span>
-        <button onClick={()=>upRoot({chat:[]})} style={{marginLeft:"auto",fontSize:10,background:"none",border:"1px solid rgba(255,255,255,.08)",color:"#334155",borderRadius:6,padding:"3px 8px",cursor:"pointer"}}>Limpar</button>
+        <button onClick={()=>upRoot({chat:[]})} style={{marginLeft:"auto",fontSize:10,background:"none",boxShadow:"inset 0 0 0 1px rgba(255,255,255,.04)",color:"#334155",borderRadius:6,padding:"3px 8px",cursor:"pointer"}}>Limpar</button>
       </div>
 
       <div style={{flex:1,overflowY:"auto",WebkitOverflowScrolling:"touch"}}>
@@ -923,7 +924,7 @@ function IATab({chat,upRoot,tasks,checked,progress,nextItem,metas}) {
             <div style={{display:"flex",flexDirection:"column",gap:8}}>
               {quick.map(q=>(
                 <button key={q} onClick={()=>send(q)} style={{
-                  background:"rgba(255,255,255,.05)",border:"1px solid rgba(255,255,255,.08)",
+                  background:"rgba(255,255,255,.05)",boxShadow:"inset 0 0 0 1px rgba(255,255,255,.04)",
                   color:"#94a3b8",borderRadius:12,padding:"12px 16px",cursor:"pointer",
                   fontSize:13,textAlign:"left",transition:"all .2s"
                 }}>{q} →</button>
@@ -936,7 +937,7 @@ function IATab({chat,upRoot,tasks,checked,progress,nextItem,metas}) {
             <div style={{
               maxWidth:"82%",
               background:m.role==="user"?"linear-gradient(135deg,rgba(251,191,36,.2),rgba(249,115,22,.15))":"rgba(255,255,255,.05)",
-              border:`1px solid ${m.role==="user"?"rgba(251,191,36,.25)":"rgba(255,255,255,.08)"}`,
+              border:`1px solid ${m.role==="user"?"rgba(251,191,36,.25)":"rgba(255,255,255,.05)"}`,
               borderRadius:m.role==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",
               padding:"11px 14px",fontSize:14,color:"#e2e8f0",lineHeight:1.65,whiteSpace:"pre-wrap"
             }}>{m.content}</div>
@@ -957,7 +958,7 @@ function IATab({chat,upRoot,tasks,checked,progress,nextItem,metas}) {
           placeholder="Pergunte, anote ou peça análise..."
           rows={1}
           style={{
-            flex:1,background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.1)",
+            flex:1,background:"rgba(255,255,255,.06)",boxShadow:"inset 0 0 0 1px rgba(255,255,255,.04)",
             borderRadius:14,padding:"11px 14px",color:"#e2e8f0",fontSize:16,resize:"none",
             outline:"none",fontFamily:"inherit",lineHeight:1.4,maxHeight:120,overflowY:"auto"
           }}/>
@@ -977,7 +978,7 @@ function IATab({chat,upRoot,tasks,checked,progress,nextItem,metas}) {
 // ── SHARED ──────────────────────────────────────────────────────
 function MiniCard({label,value,sub,color,icon,small}) {
   return(
-    <div style={{background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.07)",borderRadius:14,padding:small?"12px 10px":"14px 12px"}}>
+    <div style={{background:"#111827",boxShadow:"inset 0 0 0 1px rgba(255,255,255,.04)",borderRadius:14,padding:small?"12px 10px":"14px 12px"}}>
       {icon&&<div style={{color,marginBottom:6}}>{icon}</div>}
       <div style={{fontSize:small?18:22,fontWeight:700,color:color||"#f1f5f9",lineHeight:1}}>{value}</div>
       <div style={{fontSize:10,color:"#475569",marginTop:4,fontWeight:500}}>{label}</div>
@@ -1008,7 +1009,7 @@ function BtnReset({onClick}) {
   return(
     <button onClick={onClick} style={{
       width:"100%",marginTop:16,padding:"12px",borderRadius:12,
-      background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.07)",
+      background:"#111827",boxShadow:"inset 0 0 0 1px rgba(255,255,255,.04)",
       color:"#475569",fontSize:13,cursor:"pointer",transition:"all .2s"
     }}>Resetar dia</button>
   );
@@ -1016,7 +1017,7 @@ function BtnReset({onClick}) {
 
 function Inp({style,...props}) {
   return <input style={{
-    width:"100%",background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.1)",
+    width:"100%",background:"rgba(255,255,255,.06)",boxShadow:"inset 0 0 0 1px rgba(255,255,255,.04)",
     borderRadius:10,padding:"11px 13px",color:"#e2e8f0",fontSize:16,outline:"none",display:"block",
     fontFamily:"-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif",...style
   }} {...props}/>;
@@ -1024,7 +1025,7 @@ function Inp({style,...props}) {
 
 function Sel({style,children,...props}) {
   return <select style={{
-    width:"100%",background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.1)",
+    width:"100%",background:"rgba(255,255,255,.06)",boxShadow:"inset 0 0 0 1px rgba(255,255,255,.04)",
     borderRadius:10,padding:"11px 13px",color:"#e2e8f0",fontSize:16,outline:"none",display:"block",
     fontFamily:"-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif",...style
   }} {...props}>{children}</select>;
@@ -1040,7 +1041,7 @@ function EmptyState({icon,text,sub}) {
   );
 }
 
-const card    = {background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.07)",borderRadius:16,padding:16,marginBottom:12};
+const card    = {background:"#111827",boxShadow:"inset 0 0 0 1px rgba(255,255,255,.04)",borderRadius:16,padding:16,marginBottom:12};
 const cardTit = {fontSize:11,fontWeight:600,color:"#475569",textTransform:"uppercase",letterSpacing:".1em",marginBottom:14};
 const secLabel= {fontSize:10,color:"#334155",marginBottom:10,fontWeight:600,textTransform:"uppercase",letterSpacing:".08em"};
 const fldLabel= {fontSize:11,color:"#475569",marginBottom:5,fontWeight:500};
