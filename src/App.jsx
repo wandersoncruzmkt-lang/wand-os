@@ -1045,8 +1045,7 @@ Mensagem: ${text}]`;
         const blob=new Blob(chunks.current,{type:"audio/webm"});
         const dur=Math.round(blob.size/1000);
         const noteText=`[Áudio gravado às ${new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})} · ${dur}kb]`;
-        setText(p=>p?p+"
-"+noteText:noteText);
+        setText(p=>p?p+"\n"+noteText:noteText);
         toast2("Áudio registrado — edite e salve");
       };
       mr.start();mediaRef.current=mr;setRec(true);
