@@ -93,18 +93,20 @@ export default function AgendaIA() {
 
   const loadAll = useCallback(async () => {
     setLoading(true);
-    const [t,m,sm,n,rc] = await Promise.all([
+    const [t,m,sm,n,rc,ch] = await Promise.all([
       sb("tarefas","GET",null,`?date=eq.${today}&order=created_at.desc`),
       sb("metas","GET",null,`?order=created_at.desc`),
       sb("submetas","GET",null,`?order=ordem.asc,created_at.asc`),
       sb("notas","GET",null,`?order=created_at.desc&limit=50`),
       sb("rotina_check","GET",null,`?date=eq.${today}`),
+      sb("chat_history","GET",null,`?order=created_at.asc&limit=50`),
     ]);
     if(t) setTarefas(t);
     if(m) setMetas(m);
     if(sm) setSubmetas(sm);
     if(n) setNotas(n);
     if(rc) { const map={}; rc.forEach(r=>{map[r.item_id]=r.checked;}); setChecked(map); }
+    if(ch) setChat(ch.map(x=>({role:x.role,content:x.content})));
     setLoading(false);
   }, [today]);
 
@@ -811,12 +813,16 @@ function MetasTab({metas,submetas,addMeta,updateMetaProgress,removeMeta,showToas
       )}
 
       {pending.length===0&&selCat==="TODOS"&&!open&&<EmptyHud label="Nenhum alvo registrado"/>}
-      {pending.map((m,i)=><AlvoCard key={m.id} m={m} onPress={()=>setDetail(m)} onProgress={updateMetaProgress} onRemove={removeMeta} idx={i} subCount={submetas.filter(s=>s.meta_id===m.id).length} subDone={submetas.filter(s=>s.meta_id===m.id&&s.done).length}/>)}
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+        {pending.map((m,i)=><AlvoCard key={m.id} m={m} onPress={()=>setDetail(m)} onProgress={updateMetaProgress} onRemove={removeMeta} idx={i} subCount={submetas.filter(s=>s.meta_id===m.id).length} subDone={submetas.filter(s=>s.meta_id===m.id&&s.done).length}/>)}
+      </div>
 
       {done.length>0&&(
         <div style={{marginTop:16}}>
           <SectionLabel>ALVOS ATINGIDOS ({done.length})</SectionLabel>
-          {done.map((m,i)=><AlvoCard key={m.id} m={m} onPress={()=>setDetail(m)} onProgress={updateMetaProgress} onRemove={removeMeta} idx={i} subCount={submetas.filter(s=>s.meta_id===m.id).length} subDone={submetas.filter(s=>s.meta_id===m.id&&s.done).length}/>)}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+            {done.map((m,i)=><AlvoCard key={m.id} m={m} onPress={()=>setDetail(m)} onProgress={updateMetaProgress} onRemove={removeMeta} idx={i} subCount={submetas.filter(s=>s.meta_id===m.id).length} subDone={submetas.filter(s=>s.meta_id===m.id&&s.done).length}/>)}
+          </div>
         </div>
       )}
 
@@ -836,6 +842,59 @@ function MetasTab({metas,submetas,addMeta,updateMetaProgress,removeMeta,showToas
 }
 
 function AlvoCard({m,onPress,onProgress,onRemove,idx,subCount,subDone}) {
+  const c=META_COLORS[m.cat]||"#aa88ff";
+  const pct=Math.round((Number(m.current_val)/Math.max(Number(m.target),1))*100);
+  const [editing,setEditing]=useState(false);
+  const [val,setVal]=useState(m.current_val);
+
+  return(
+    <div style={{
+      background:"#111115",borderRadius:8,overflow:"hidden",
+      opacity:m.done?.45:1,animation:`fadeUp .2s ease ${idx*.04}s both`,
+      border:"1px solid rgba(255,255,255,.05)"
+    }}>
+      {/* Icon + % header */}
+      <div onClick={onPress} style={{
+        padding:"14px 12px 10px",cursor:"pointer",
+        background:`linear-gradient(135deg,${c}14,transparent)`,
+        position:"relative"
+      }}>
+        <button onClick={e=>{e.stopPropagation();onRemove(m.id);}} style={{position:"absolute",top:6,right:6,background:"none",border:"none",color:"rgba(255,255,255,.15)",cursor:"pointer",fontSize:13,lineHeight:1,padding:2}}>x</button>
+        <div style={{fontSize:26,marginBottom:5,filter:`drop-shadow(0 0 6px ${c}55)`}}>{META_ICONS[m.cat]||"X"}</div>
+        <div style={{fontSize:11,fontWeight:600,color:m.done?"rgba(255,255,255,.2)":"#f0f0f2",lineHeight:1.3,textDecoration:m.done?"line-through":"none",paddingRight:16}}>{m.title}</div>
+        {m.descricao&&<div style={{fontSize:9,color:"rgba(255,255,255,.25)",marginTop:2,lineHeight:1.3}}>{m.descricao.substring(0,35)}</div>}
+      </div>
+
+      {/* Value + bar */}
+      <div style={{padding:"0 12px 10px"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:5}}>
+          <span style={{fontSize:10,color:"rgba(255,255,255,.3)"}}>{m.current_val}/{m.target}</span>
+          <span style={{fontSize:12,fontWeight:700,fontFamily:"'Orbitron',monospace",color:pct>=100?"#00ffaa":c}}>{pct}%</span>
+        </div>
+        {/* Progress bar thin - like reference */}
+        <div style={{height:3,background:"rgba(255,255,255,.06)",borderRadius:99,overflow:"hidden",marginBottom:8}}>
+          <div style={{height:3,borderRadius:99,width:`${Math.min(pct,100)}%`,background:pct>=100?"#00ffaa":c,transition:"width .7s ease"}}/>
+        </div>
+
+        {/* Footer */}
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <span style={{fontSize:8,fontFamily:"'Orbitron',monospace",padding:"2px 5px",borderRadius:10,background:`${c}18`,color:c,letterSpacing:".06em"}}>{m.cat.substring(0,8)}</span>
+          {!m.done&&(
+            editing?(
+              <div style={{display:"flex",gap:3,alignItems:"center"}} onClick={e=>e.stopPropagation()}>
+                <DataInput type="number" value={val} onChange={e=>setVal(e.target.value)} style={{width:52,padding:"3px 6px",fontSize:12}}/>
+                <GlowBtn small color={c} onClick={()=>{onProgress(m.id,val);setEditing(false);}}>OK</GlowBtn>
+              </div>
+            ):(
+              <button onClick={e=>{e.stopPropagation();setVal(m.current_val);setEditing(true);}} style={{fontSize:10,background:"none",border:"none",color:"rgba(255,255,255,.2)",cursor:"pointer",padding:0}}>+</button>
+            )
+          )}
+        </div>
+        {subCount>0&&<div style={{fontSize:8,color:"rgba(255,255,255,.2)",marginTop:4}}>{subDone}/{subCount} sub-alvos</div>}
+      </div>
+    </div>
+  );
+}) {
   const c=META_COLORS[m.cat]||"#aa88ff";
   const pct=Math.round((Number(m.current_val)/Math.max(Number(m.target),1))*100);
   const [editing,setEditing]=useState(false);
@@ -1068,22 +1127,56 @@ function JarvisTab({chat,setChat,addTarefa,addMeta,showToast,tarefas,checked,pro
   const send = async(text) => {
     if(!text.trim()||loading) return;
     const uMsg={role:"user",content:text};
-    const next=[...chat,uMsg]; setChat(next); setInput(""); setLoading(true);
-    const ctx=`[STATUS ${new Date().toLocaleDateString("pt-BR")}: Rotina ${progress}% (${doneB}/${ROUTINE.length}). Proximo: ${nextItem?`${nextItem.time} - ${nextItem.label}`:"concluido"}. Tarefas pendentes: ${pending}. Metas ativas: ${metas.filter(m=>!m.done).length}. Se identificar tarefa ou meta na mensagem, adicione ao final: CADASTRAR:{"tipo":"tarefa|meta","title":"...","tag":"UPMIND","cat":"UPMIND","target":100}]\n\n${text}`;
+    const next=[...chat,uMsg];
+    setChat(next); setInput(""); setLoading(true);
+
+    // Save user msg to Supabase
+    await sb("chat_history","POST",{role:"user",content:text,created_at:new Date().toISOString()});
+
+    const ctx=`[CONTEXTO ${new Date().toLocaleDateString("pt-BR")} ${new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}: Rotina ${progress}% (${doneB}/${ROUTINE.length} blocos). Proximo bloco: ${nextItem?nextItem.time+" "+nextItem.label:"rotina concluida"}. Tarefas pendentes: ${pending}. Metas ativas: ${metas.filter(m=>!m.done).length}.
+
+INSTRUCAO IMPORTANTE: Se o usuario pedir para criar tarefa, meta, lembrete ou agendar algo, voce DEVE incluir no final da sua resposta exatamente este formato (sem alterar):
+%%CADASTRAR%%{"tipo":"tarefa","title":"titulo aqui","note":"detalhe","tag":"UPMIND"}%%FIM%%
+ou para meta:
+%%CADASTRAR%%{"tipo":"meta","title":"titulo aqui","cat":"UPMIND","target":100,"objetivo":"por que importa"}%%FIM%%
+
+Mensagem do usuario: ${text}]`;
+
     try {
       const reply=await askAI([...chat,{role:"user",content:ctx}]);
-      const match=reply.match(/CADASTRAR:(\{.*?\})/s);
+
+      // Extract CADASTRAR block with robust parsing
       let clean=reply;
+      let cadastrado=false;
+      const match=reply.match(/%%CADASTRAR%%([\s\S]*?)%%FIM%%/);
       if(match) {
-        clean=reply.replace(/CADASTRAR:\{.*?\}/s,"").trim();
+        clean=reply.replace(/%%CADASTRAR%%[\s\S]*?%%FIM%%/g,"").trim();
         try {
-          const d=JSON.parse(match[1]);
-          if(d.tipo==="meta") { await addMeta({title:d.title,cat:d.cat||"UPMIND",tipo:"Mensal",target:d.target||100,descricao:"",objetivo:""}); showToast("Meta registrada por J.A.R.V.I.S"); }
-          else { await addTarefa({title:d.title,tag:d.tag||"UPMIND",note:"",reminder_time:""}); showToast("Operacao criada por J.A.R.V.I.S"); }
-        } catch {}
+          const raw=match[1].trim().replace(/[
+]+/g," ");
+          const d=JSON.parse(raw);
+          if(d.tipo==="meta") {
+            await addMeta({title:d.title||"Meta",cat:d.cat||"UPMIND",tipo:"Mensal",target:Number(d.target)||100,descricao:d.note||"",objetivo:d.objetivo||""});
+            showToast("Alvo registrado por J.A.R.V.I.S");
+          } else {
+            await addTarefa({title:d.title||"Tarefa",tag:d.tag||"UPMIND",note:d.note||"",reminder_time:d.reminder_time||""});
+            showToast("Operacao criada por J.A.R.V.I.S");
+          }
+          cadastrado=true;
+        } catch(e) { console.log("parse err",e); }
       }
-      setChat([...next,{role:"assistant",content:clean}]);
-    } catch { setChat([...next,{role:"assistant",content:"SISTEMA OFFLINE. Verifique a API key."}]); }
+
+      const assistMsg={role:"assistant",content:clean};
+      setChat([...next,assistMsg]);
+
+      // Save assistant reply to Supabase
+      await sb("chat_history","POST",{role:"assistant",content:clean,created_at:new Date().toISOString()});
+
+    } catch(e) {
+      const errMsg={role:"assistant",content:"SISTEMA OFFLINE. Tente novamente."};
+      setChat([...next,errMsg]);
+      await sb("chat_history","POST",{role:"assistant",content:errMsg.content,created_at:new Date().toISOString()});
+    }
     setLoading(false);
   };
   const startRec=async()=>{ try { const stream=await navigator.mediaDevices.getUserMedia({audio:true}); const mr=new MediaRecorder(stream); chunks.current=[]; mr.ondataavailable=e=>chunks.current.push(e.data); mr.onstop=()=>{ stream.getTracks().forEach(t=>t.stop()); setRecording(false); showToast("Audio registrado"); }; mr.start(); mediaRef.current=mr; setRecording(true); } catch { showToast("Microfone bloqueado","err"); } };
