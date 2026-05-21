@@ -20,217 +20,225 @@ async function sb(table, method="GET", body=null, query="") {
 }
 
 const getToday = () => new Date().toISOString().split("T")[0];
-const fmtTime  = (d) => d.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
-const fmtDate  = (d) => d.toLocaleDateString("pt-BR", { weekday:"long", day:"numeric", month:"long" });
-const fmtDT    = (iso) => new Date(iso).toLocaleString("pt-BR", { day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit" });
-const fmtShort = (iso) => new Date(iso+"T12:00").toLocaleDateString("pt-BR", { day:"2-digit", month:"2-digit", year:"2-digit" });
+const fmtTime  = (d) => d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+const fmtDate  = (d) => d.toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long"});
+const fmtDT    = (iso) => new Date(iso).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+const fmtShort = (iso) => new Date(iso+"T12:00").toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"2-digit"});
 const t2m = (s) => { const [h,m]=s.split(":").map(Number); return h*60+m; };
 
 const ROUTINE = [
-  { id:"r1",  time:"04:50", label:"Despertar",         icon:"🌅", desc:"Agua 500ml · Sem celular · Roupa separada",    cat:"Manha" },
-  { id:"r2",  time:"05:00", label:"Academia",           icon:"💪", desc:"90 min treino · Mente livre",                  cat:"Manha" },
-  { id:"r3",  time:"06:30", label:"Cafe + Leitura",     icon:"📖", desc:"Banho · 1a refeicao · 10 min leitura",        cat:"Manha" },
-  { id:"r4",  time:"07:10", label:"Deslocamento",       icon:"🚗", desc:"Revisar pauta · Chegar 7h25",                  cat:"Trabalho" },
-  { id:"r5",  time:"07:30", label:"Abertura CentroMed", icon:"🏥", desc:"Meta Ads · CPL · WhatsApp · Breno",            cat:"Trabalho" },
-  { id:"r6",  time:"08:00", label:"Bloco Conteudo",     icon:"🎬", desc:"Maria Eduarda · Aprovacoes · Gravacoes",       cat:"Trabalho" },
-  { id:"r7",  time:"09:30", label:"Reuniao Medicos",    icon:"👨‍⚕️", desc:"Joao Paulo · Mardonho · Larissa · CFM",   cat:"Trabalho" },
-  { id:"r8",  time:"10:30", label:"Trafego Pago",       icon:"📊", desc:"Frequencia < 2,5x · CPL < R$4 escalar",       cat:"Trabalho" },
-  { id:"r9",  time:"12:00", label:"Almoco",             icon:"🍽️", desc:"Refeicao natural · Sem tela · Descanso",      cat:"Nutricao" },
-  { id:"r10", time:"13:00", label:"Bloco UPMIND",       icon:"⚡", desc:"Clientes · Entregas · Pipeline",               cat:"UPMIND" },
-  { id:"r11", time:"14:30", label:"Estrategia UPMIND",  icon:"🧠", desc:"Mentoria waitlist · Newton · Copa 2026",       cat:"UPMIND" },
-  { id:"r12", time:"15:30", label:"Conteudo Pessoal",   icon:"📱", desc:"1 conteudo · Hook Virada Moral CTA",          cat:"Marca" },
-  { id:"r13", time:"16:30", label:"Presenca Digital",   icon:"✨", desc:"DMs estrategicos · Story · Metricas",          cat:"Marca" },
-  { id:"r14", time:"17:00", label:"Review do Dia",      icon:"✅", desc:"Executado vs planejado · 3 prioridades",       cat:"Encerramento" },
-  { id:"r15", time:"17:30", label:"Jantar + Familia",   icon:"🏠", desc:"Refeicao natural · Familia · Descanso",        cat:"Nutricao" },
-  { id:"r16", time:"19:30", label:"Wind Down",          icon:"🌙", desc:"Ultima refeicao · Sem tela · Dormir 21h30",   cat:"Encerramento" },
+  {id:"r1", time:"04:50",label:"Despertar",       icon:"🌅",desc:"Água 500ml · Sem celular · Roupa separada",   cat:"Manhã"},
+  {id:"r2", time:"05:00",label:"Academia",         icon:"💪",desc:"90 min treino · Mente livre",                cat:"Manhã"},
+  {id:"r3", time:"06:30",label:"Café + Leitura",   icon:"📖",desc:"Banho · 1ª refeição · 10 min leitura",      cat:"Manhã"},
+  {id:"r4", time:"07:10",label:"Deslocamento",     icon:"🚗",desc:"Revisar pauta · Chegar 7h25",               cat:"Trabalho"},
+  {id:"r5", time:"07:30",label:"Abertura CentroMed",icon:"🏥",desc:"Meta Ads · CPL · WhatsApp · Breno",        cat:"Trabalho"},
+  {id:"r6", time:"08:00",label:"Bloco Conteúdo",   icon:"🎬",desc:"Maria Eduarda · Aprovações · Gravações",    cat:"Trabalho"},
+  {id:"r7", time:"09:30",label:"Reunião Médicos",  icon:"⚕️",desc:"João Paulo · Mardônio · Larissa · CFM",    cat:"Trabalho"},
+  {id:"r8", time:"10:30",label:"Tráfego Pago",     icon:"📊",desc:"Frequência < 2,5x · CPL < R$4 → escalar",  cat:"Trabalho"},
+  {id:"r9", time:"12:00",label:"Almoço",           icon:"🍽️",desc:"Refeição natural · Sem tela · Descanso",   cat:"Nutrição"},
+  {id:"r10",time:"13:00",label:"Bloco UPMIND",     icon:"⚡",desc:"Clientes · Entregas · Pipeline",            cat:"UPMIND"},
+  {id:"r11",time:"14:30",label:"Estratégia UPMIND",icon:"🧠",desc:"Mentoria waitlist · Newton · Copa 2026",    cat:"UPMIND"},
+  {id:"r12",time:"15:30",label:"Conteúdo Pessoal", icon:"📱",desc:"1 conteúdo · Hook → Virada → Moral → CTA", cat:"Marca"},
+  {id:"r13",time:"16:30",label:"Presença Digital", icon:"✨",desc:"DMs estratégicos · Story · Métricas",       cat:"Marca"},
+  {id:"r14",time:"17:00",label:"Review do Dia",    icon:"✅",desc:"Executado vs planejado · 3 prioridades",    cat:"Encerramento"},
+  {id:"r15",time:"17:30",label:"Jantar + Família", icon:"🏠",desc:"Refeição natural · Família · Descanso",     cat:"Nutrição"},
+  {id:"r16",time:"19:30",label:"Wind Down",        icon:"🌙",desc:"Última refeição · Sem tela · Dormir 21h30", cat:"Encerramento"},
 ];
 
-const CAT_C = {
-  "Manha":"#00d4ff", "Trabalho":"#4488ff", "Nutricao":"#00ffaa",
-  "UPMIND":"#aa88ff", "Marca":"#ff88cc", "Encerramento":"#ffcc44",
+const CAT_COLOR = {
+  "Manhã":"#4ade80","Trabalho":"#60a5fa","Nutrição":"#fb923c",
+  "UPMIND":"#a78bfa","Marca":"#f472b6","Encerramento":"#facc15",
 };
+const META_CATS   = ["UPMIND","CentroMed","Marca Pessoal","Saúde","Financeiro","Leitura","Pessoal"];
+const META_COLORS = {UPMIND:"#a78bfa",CentroMed:"#60a5fa","Marca Pessoal":"#f472b6",Saúde:"#4ade80",Financeiro:"#facc15",Leitura:"#fb923c",Pessoal:"#94a3b8"};
+const META_ICONS  = {UPMIND:"⚡",CentroMed:"🏥","Marca Pessoal":"✨",Saúde:"💪",Financeiro:"💰",Leitura:"📖",Pessoal:"🌱"};
+const TAG_COLORS  = {UPMIND:"#a78bfa",CentroMed:"#60a5fa",Marca:"#f472b6",Corpo:"#4ade80",Pausa:"#94a3b8",Encerramento:"#facc15"};
 
-const META_CATS   = ["UPMIND","CentroMed","Marca Pessoal","Saude","Financeiro","Leitura","Pessoal"];
-const META_COLORS = { UPMIND:"#aa88ff", CentroMed:"#4488ff", "Marca Pessoal":"#ff88cc", Saude:"#00ffaa", Financeiro:"#ffcc44", Leitura:"#ff9944", Pessoal:"#88ddff" };
-const META_ICONS  = { UPMIND:"⚡", CentroMed:"🏥", "Marca Pessoal":"✨", Saude:"💪", Financeiro:"💰", Leitura:"📖", Pessoal:"🌱" };
-const TAG_COLORS  = { UPMIND:"#aa88ff", CentroMed:"#4488ff", Marca:"#ff88cc", Corpo:"#00ffaa", Pausa:"#88ddff", Encerramento:"#ffcc44" };
+function askNotif(){if("Notification" in window&&Notification.permission==="default")Notification.requestPermission();}
+function notify(t,b){if("Notification" in window&&Notification.permission==="granted")new Notification(t,{body:b});}
 
-function askNotif() { if("Notification" in window && Notification.permission==="default") Notification.requestPermission(); }
-function notify(title,body) { if("Notification" in window && Notification.permission==="granted") new Notification(title,{body}); }
-
-async function askAI(messages, sys) {
-  const system = sys || "Voce e J.A.R.V.I.S — assistente pessoal de Wanderson Cruz, Founder UPMIND + Diretor Marketing CentroMed, Crateus-CE. Tom: preciso, inteligente, direto. Sem enrolacao. Portugues brasileiro. Max 3 paragrafos.";
-  try {
-    const res = await fetch("/api/ai", {
-      method:"POST", headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({ system, messages })
-    });
-    if(res.ok) { const d=await res.json(); return d.text||"Sem resposta."; }
-  } catch {}
-  return "J.A.R.V.I.S offline. Verifique a API key.";
+async function askAI(messages,sys){
+  const system=sys||"Você é J.A.R.V.I.S, assistente pessoal de Wanderson Cruz. Founder UPMIND + Diretor Marketing CentroMed, Crateús-CE. Direto, inteligente, sem enrolação. Português brasileiro.";
+  try{
+    const res=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({system,messages})});
+    if(res.ok){const d=await res.json();return d.text||"Sem resposta.";}
+  }catch{}
+  return "J.A.R.V.I.S offline.";
 }
 
-const NAV = [
-  { id:"home",    label:"Base",    icon:<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{width:20,height:20}}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
-  { id:"rotina",  label:"Missoes", icon:<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{width:20,height:20}}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> },
-  { id:"tarefas", label:"Ops",     icon:<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{width:20,height:20}}><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> },
-  { id:"metas",   label:"Alvos",   icon:<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{width:20,height:20}}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> },
-  { id:"jarvis",  label:"J.A.R.V.I.S", icon:<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{width:20,height:20}}><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg> },
+const NAV=[
+  {id:"home",   label:"Início",  icon:"⌂"},
+  {id:"rotina", label:"Rotina",  icon:"◷"},
+  {id:"tarefas",label:"Tarefas", icon:"☑"},
+  {id:"metas",  label:"Metas",   icon:"◎"},
+  {id:"jarvis", label:"IA",      icon:"◈"},
 ];
 
-export default function AgendaIA() {
-  const today = getToday();
-  const [now,setNow]         = useState(new Date());
-  const [tab,setTab]         = useState("home");
-  const [toast,setToast]     = useState(null);
-  const [loading,setLoading] = useState(true);
-  const [tarefas,setTarefas] = useState([]);
-  const [metas,setMetas]     = useState([]);
-  const [submetas,setSubmetas] = useState([]);
-  const [notas,setNotas]     = useState([]);
-  const [checked,setChecked] = useState({});
-  const [chat,setChat]       = useState([]);
+// ════════════════════════════════════════════════════════════════
+export default function App(){
+  const today=getToday();
+  const [now,setNow]=useState(new Date());
+  const [tab,setTab]=useState("home");
+  const [toast,setToast]=useState(null);
+  const [loading,setLoading]=useState(true);
+  const [tarefas,setTarefas]=useState([]);
+  const [metas,setMetas]=useState([]);
+  const [submetas,setSubmetas]=useState([]);
+  const [notas,setNotas]=useState([]);
+  const [checked,setChecked]=useState({});
+  const [chat,setChat]=useState([]);
 
-  const loadAll = useCallback(async () => {
+  const loadAll=useCallback(async()=>{
     setLoading(true);
-    const [t,m,sm,n,rc,ch] = await Promise.all([
+    const [t,m,sm,n,rc,ch]=await Promise.all([
       sb("tarefas","GET",null,`?date=eq.${today}&order=created_at.desc`),
       sb("metas","GET",null,`?order=created_at.desc`),
       sb("submetas","GET",null,`?order=ordem.asc,created_at.asc`),
       sb("notas","GET",null,`?order=created_at.desc&limit=50`),
       sb("rotina_check","GET",null,`?date=eq.${today}`),
-      sb("chat_history","GET",null,`?order=created_at.asc&limit=50`),
+      sb("chat_history","GET",null,`?order=created_at.asc&limit=60`),
     ]);
-    if(t) setTarefas(t);
-    if(m) setMetas(m);
-    if(sm) setSubmetas(sm);
-    if(n) setNotas(n);
-    if(rc) { const map={}; rc.forEach(r=>{map[r.item_id]=r.checked;}); setChecked(map); }
-    if(ch) setChat(ch.map(x=>({role:x.role,content:x.content})));
+    if(t)setTarefas(t);
+    if(m)setMetas(m);
+    if(sm)setSubmetas(sm);
+    if(n)setNotas(n);
+    if(rc){const map={};rc.forEach(r=>{map[r.item_id]=r.checked;});setChecked(map);}
+    if(ch)setChat(ch.map(x=>({role:x.role,content:x.content})));
     setLoading(false);
-  }, [today]);
+  },[today]);
 
-  useEffect(()=>{ loadAll(); askNotif(); },[]);
-  useEffect(()=>{ const t=setInterval(()=>setNow(new Date()),60000); return()=>clearInterval(t); },[]);
-  useEffect(()=>{
-    const cur=fmtTime(now);
-    ROUTINE.forEach(item=>{ const [h,m]=item.time.split(":").map(Number); const rem=new Date(); rem.setHours(h,m-30,0); if(fmtTime(rem)===cur&&!checked[item.id]) notify(`Em 30min: ${item.label}`,item.desc); });
-    tarefas.forEach(t=>{ if(t.reminder_time===cur&&!t.done&&!t.reminded){ notify(`Tarefa: ${t.title}`,t.note||""); upDay({tasks:tarefas.map(x=>x.id===t.id?{...x,reminded:true}:x)}); } });
-  },[now]);
+  useEffect(()=>{loadAll();askNotif();},[]);
+  useEffect(()=>{const t=setInterval(()=>setNow(new Date()),60000);return()=>clearInterval(t);},[]);
 
-  function showToast(msg,type="ok") { setToast({msg,type}); setTimeout(()=>setToast(null),2500); }
-  function upDay(p) { /* legacy compat */ }
+  function toast2(msg,err=false){setToast({msg,err});setTimeout(()=>setToast(null),2400);}
 
-  async function toggleCheck(id) {
-    const val=!checked[id]; setChecked(p=>({...p,[id]:val}));
+  async function toggleCheck(id){
+    const val=!checked[id];setChecked(p=>({...p,[id]:val}));
     const rid=`${today}_${id}`;
-    if(val) { await sb("rotina_check","POST",{id:rid,date:today,item_id:id,checked:true}); showToast("Missao concluida"); }
+    if(val)await sb("rotina_check","POST",{id:rid,date:today,item_id:id,checked:true});
     else await sb(`rotina_check?id=eq.${rid}`,"DELETE");
   }
 
-  async function addTarefa(data) {
-    const nova={id:Date.now().toString(),date:today,done:false,reminded:false,...data,created_at:new Date().toISOString()};
-    const res=await sb("tarefas","POST",nova);
-    if(res){setTarefas(p=>[res[0]||nova,...p]);showToast("Operacao adicionada");}
+  async function addTarefa(data){
+    const n={id:Date.now().toString(),date:today,done:false,reminded:false,...data,created_at:new Date().toISOString()};
+    const r=await sb("tarefas","POST",n);
+    if(r){setTarefas(p=>[r[0]||n,...p]);toast2("Tarefa criada");}
   }
-  async function toggleTarefa(id) {
+  async function toggleTarefa(id){
     const t=tarefas.find(x=>x.id===id);
-    const upd={done:!t.done,done_at:!t.done?new Date().toISOString():null};
-    await sb(`tarefas?id=eq.${id}`,"PATCH",upd);
-    setTarefas(p=>p.map(x=>x.id===id?{...x,...upd}:x));
+    const u={done:!t.done,done_at:!t.done?new Date().toISOString():null};
+    await sb(`tarefas?id=eq.${id}`,"PATCH",u);
+    setTarefas(p=>p.map(x=>x.id===id?{...x,...u}:x));
   }
-  async function removeTarefa(id) { await sb(`tarefas?id=eq.${id}`,"DELETE"); setTarefas(p=>p.filter(x=>x.id!==id)); }
+  async function removeTarefa(id){await sb(`tarefas?id=eq.${id}`,"DELETE");setTarefas(p=>p.filter(x=>x.id!==id));}
 
-  async function addMeta(data) {
-    const nova={id:Date.now().toString(),done:false,current_val:0,logs:[],...data,created_at:new Date().toISOString()};
-    const res=await sb("metas","POST",nova);
-    if(res){setMetas(p=>[res[0]||nova,...p]);showToast("Alvo registrado");}
+  async function addMeta(data){
+    const n={id:Date.now().toString(),done:false,current_val:0,logs:[],...data,created_at:new Date().toISOString()};
+    const r=await sb("metas","POST",n);
+    if(r){setMetas(p=>[r[0]||n,...p]);toast2("Meta criada");}
   }
-  async function updateMetaProgress(id,val) {
+  async function updateMetaProgress(id,val){
     const m=metas.find(x=>x.id===id);
     const cur=Math.min(Math.max(0,Number(val)),Number(m.target));
     const done=cur>=Number(m.target);
     const logs=[...(m.logs||[]),{at:new Date().toISOString(),val:cur}];
-    const upd={current_val:cur,done,done_at:done?new Date().toISOString():null,logs};
-    await sb(`metas?id=eq.${id}`,"PATCH",upd);
-    setMetas(p=>p.map(x=>x.id===id?{...x,...upd}:x));
-    if(done) showToast("Alvo atingido!");
+    const u={current_val:cur,done,done_at:done?new Date().toISOString():null,logs};
+    await sb(`metas?id=eq.${id}`,"PATCH",u);
+    setMetas(p=>p.map(x=>x.id===id?{...x,...u}:x));
+    if(done)toast2("Meta concluída! 🎯");
   }
-  async function removeMeta(id) { await sb(`metas?id=eq.${id}`,"DELETE"); setMetas(p=>p.filter(x=>x.id!==id)); }
+  async function removeMeta(id){await sb(`metas?id=eq.${id}`,"DELETE");setMetas(p=>p.filter(x=>x.id!==id));}
 
-  async function addSubmeta(metaId,data) {
-    const nova={id:Date.now().toString(),meta_id:metaId,done:false,current_val:0,ordem:0,...data,created_at:new Date().toISOString()};
-    const res=await sb("submetas","POST",nova);
-    if(res){setSubmetas(p=>[...p,res[0]||nova]);showToast("Sub-alvo criado");}
+  async function addSubmeta(metaId,data){
+    const n={id:Date.now().toString(),meta_id:metaId,done:false,current_val:0,ordem:0,...data,created_at:new Date().toISOString()};
+    const r=await sb("submetas","POST",n);
+    if(r){setSubmetas(p=>[...p,r[0]||n]);toast2("Submeta criada");}
   }
-  async function updateSubmeta(id,val) {
+  async function updateSubmeta(id,val){
     const s=submetas.find(x=>x.id===id);
     const cur=Math.min(Math.max(0,Number(val)),Number(s.target));
     const done=cur>=Number(s.target);
-    const upd={current_val:cur,done,done_at:done?new Date().toISOString():null};
-    await sb(`submetas?id=eq.${id}`,"PATCH",upd);
-    setSubmetas(p=>p.map(x=>x.id===id?{...x,...upd}:x));
+    const u={current_val:cur,done,done_at:done?new Date().toISOString():null};
+    await sb(`submetas?id=eq.${id}`,"PATCH",u);
+    setSubmetas(p=>p.map(x=>x.id===id?{...x,...u}:x));
   }
-  async function toggleSubmeta(id) {
+  async function toggleSubmeta(id){
     const s=submetas.find(x=>x.id===id);
-    const upd={done:!s.done,done_at:!s.done?new Date().toISOString():null,current_val:!s.done?s.target:0};
-    await sb(`submetas?id=eq.${id}`,"PATCH",upd);
-    setSubmetas(p=>p.map(x=>x.id===id?{...x,...upd}:x));
+    const u={done:!s.done,done_at:!s.done?new Date().toISOString():null,current_val:!s.done?s.target:0};
+    await sb(`submetas?id=eq.${id}`,"PATCH",u);
+    setSubmetas(p=>p.map(x=>x.id===id?{...x,...u}:x));
   }
-  async function removeSubmeta(id) { await sb(`submetas?id=eq.${id}`,"DELETE"); setSubmetas(p=>p.filter(x=>x.id!==id)); }
+  async function removeSubmeta(id){await sb(`submetas?id=eq.${id}`,"DELETE");setSubmetas(p=>p.filter(x=>x.id!==id));}
 
-  async function addNota(text) {
-    const nova={id:Date.now().toString(),texto:text,converted:false,created_at:new Date().toISOString()};
-    const res=await sb("notas","POST",nova);
-    if(res){setNotas(p=>[res[0]||nova,...p]);showToast("Nota registrada");}
+  async function addNota(text){
+    const n={id:Date.now().toString(),texto:text,converted:false,created_at:new Date().toISOString()};
+    const r=await sb("notas","POST",n);
+    if(r){setNotas(p=>[r[0]||n,...p]);toast2("Nota salva");}
   }
-  async function convertNota(nota) {
-    try {
-      const reply=await askAI([{role:"user",content:`Analise e retorne APENAS JSON: {"tipo":"tarefa|meta","title":"...","note":"...","tag":"UPMIND|CentroMed|Marca|Corpo","cat":"UPMIND|CentroMed|Marca Pessoal|Saude|Financeiro|Leitura|Pessoal","target":100,"objetivo":"...","descricao":"..."}\nAnotacao: "${nota.texto}"`}]);
-      const parsed=JSON.parse(reply.replace(/```json|```/g,"").trim());
-      if(parsed.tipo==="meta") await addMeta({title:parsed.title,descricao:parsed.descricao||"",cat:parsed.cat||"UPMIND",tipo:"Mensal",target:parsed.target||100,objetivo:parsed.objetivo||""});
-      else await addTarefa({title:parsed.title,note:parsed.note||"",tag:parsed.tag||"UPMIND",reminder_time:""});
+  async function convertNota(nota){
+    try{
+      const reply=await askAI([{role:"user",content:`Analise e retorne APENAS JSON: {"tipo":"tarefa|meta","title":"...","note":"...","tag":"UPMIND","cat":"UPMIND","target":100,"objetivo":"..."}\nAnotação: "${nota.texto}"`}]);
+      const d=JSON.parse(reply.replace(/```json|```/g,"").trim());
+      if(d.tipo==="meta")await addMeta({title:d.title,descricao:d.note||"",cat:d.cat||"UPMIND",tipo:"Mensal",target:d.target||100,objetivo:d.objetivo||""});
+      else await addTarefa({title:d.title,note:d.note||"",tag:d.tag||"UPMIND",reminder_time:""});
       await sb(`notas?id=eq.${nota.id}`,"PATCH",{converted:true});
       setNotas(p=>p.map(n=>n.id===nota.id?{...n,converted:true}:n));
-      showToast("Convertido com sucesso");
-    } catch { showToast("Erro ao converter","err"); }
+      toast2("Convertido com sucesso");
+    }catch{toast2("Erro ao converter",true);}
   }
-  async function removeNota(id) { await sb(`notas?id=eq.${id}`,"DELETE"); setNotas(p=>p.filter(n=>n.id!==id)); }
+  async function removeNota(id){await sb(`notas?id=eq.${id}`,"DELETE");setNotas(p=>p.filter(n=>n.id!==id));}
 
-  const done     = Object.values(checked).filter(Boolean).length;
-  const progress = Math.round((done/ROUTINE.length)*100);
-  const nowMins  = now.getHours()*60+now.getMinutes();
-  const current  = ROUTINE.slice().reverse().find(r=>t2m(r.time)<=nowMins);
-  const nextItem = ROUTINE.find(r=>!checked[r.id]&&t2m(r.time)>nowMins);
+  const done=Object.values(checked).filter(Boolean).length;
+  const progress=Math.round((done/ROUTINE.length)*100);
+  const nowMins=now.getHours()*60+now.getMinutes();
+  const current=ROUTINE.slice().reverse().find(r=>t2m(r.time)<=nowMins);
+  const nextItem=ROUTINE.find(r=>!checked[r.id]&&t2m(r.time)>nowMins);
 
-  const shared = {today,now,tarefas,metas,submetas,notas,checked,chat,setChat,
+  const shared={today,now,tarefas,metas,submetas,notas,checked,chat,setChat,
     addTarefa,toggleTarefa,removeTarefa,addMeta,updateMetaProgress,removeMeta,
     addSubmeta,updateSubmeta,toggleSubmeta,removeSubmeta,addNota,convertNota,removeNota,
-    toggleCheck,showToast,progress,done,current,nextItem,loading};
+    toggleCheck,toast2,progress,done,current,nextItem,loading};
 
-  return (
-    <div style={{
-      maxWidth:430,margin:"0 auto",height:"100dvh",
-      background:"#0c0c0e",color:"#f0f0f2",
-      fontFamily:"'Exo 2',system-ui,sans-serif",
-      display:"flex",flexDirection:"column",
-      position:"fixed",top:0,left:"50%",transform:"translateX(-50%)",
-      width:"100%",overflow:"hidden"
-    }}>
-      <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@200;300;400;500;600;700&family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet"/>
+  return(
+    <div style={{maxWidth:430,margin:"0 auto",height:"100dvh",background:"#0f0f10",color:"#f5f5f5",fontFamily:"-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif",display:"flex",flexDirection:"column",position:"fixed",top:0,left:"50%",transform:"translateX(-50%)",width:"100%",overflow:"hidden"}}>
 
-      {/* Scanline overlay */}
-      <div style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:200,background:"none"}}/>
+      {/* HEADER */}
+      <div style={{padding:"12px 16px 10px",borderBottom:"1px solid #1c1c1e",flexShrink:0}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div>
+            <div style={{fontSize:11,color:"#6b6b6b",marginBottom:2,textTransform:"capitalize"}}>{fmtDate(now)}</div>
+            <div style={{fontSize:17,fontWeight:600,color:"#f5f5f5",lineHeight:1.2}}>
+              {current?`${current.icon} ${current.label}`:`Olá, Wanderson`}
+            </div>
+          </div>
+          {/* Progress ring */}
+          <div style={{position:"relative",width:48,height:48,flexShrink:0}}>
+            <svg width="48" height="48" style={{transform:"rotate(-90deg)"}}>
+              <circle cx="24" cy="24" r="20" fill="none" stroke="#1c1c1e" strokeWidth="3"/>
+              <circle cx="24" cy="24" r="20" fill="none"
+                stroke={progress>=80?"#4ade80":progress>=40?"#a78bfa":"#60a5fa"}
+                strokeWidth="3" strokeLinecap="round"
+                strokeDasharray={2*Math.PI*20}
+                strokeDashoffset={2*Math.PI*20-(progress/100)*2*Math.PI*20}
+                style={{transition:"stroke-dashoffset .5s ease"}}/>
+            </svg>
+            <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+              <div style={{fontSize:12,fontWeight:700,color:"#f5f5f5",lineHeight:1}}>{progress}%</div>
+            </div>
+          </div>
+        </div>
+        {nextItem&&(
+          <div style={{display:"flex",alignItems:"center",gap:6,marginTop:8,padding:"6px 10px",background:"#1c1c1e",borderRadius:8}}>
+            <div style={{width:5,height:5,borderRadius:"50%",background:CAT_COLOR[nextItem.cat]||"#a78bfa",flexShrink:0}}/>
+            <span style={{fontSize:11,color:"#9b9b9b"}}>Próximo {nextItem.time}</span>
+            <span style={{fontSize:11,color:"#f5f5f5",fontWeight:500}}>{nextItem.label}</span>
+          </div>
+        )}
+      </div>
 
-      {/* Grid bg */}
-      <div style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:0,opacity:0}}/>
-
-      <div style={{height:"env(safe-area-inset-top,8px)",flexShrink:0,position:"relative",zIndex:10}}/>
-
-      <TopBar now={now} progress={progress} done={done} current={current} nextItem={nextItem}/>
-
-      <div style={{flex:1,overflowY:"scroll",overflowX:"hidden",WebkitOverflowScrolling:"touch",paddingBottom:"calc(72px + env(safe-area-inset-bottom,0px))",minHeight:0,position:"relative",zIndex:10}}>
-        {loading&&<LoadingScreen/>}
+      {/* CONTENT */}
+      <div style={{flex:1,overflowY:"scroll",overflowX:"hidden",WebkitOverflowScrolling:"touch",paddingBottom:"calc(70px + env(safe-area-inset-bottom,0px))",minHeight:0}}>
+        {loading&&<Loader/>}
         {!loading&&tab==="home"    &&<HomeTab    {...shared} setTab={setTab}/>}
         {!loading&&tab==="rotina"  &&<RotinaTab  {...shared}/>}
         {!loading&&tab==="tarefas" &&<TarefasTab {...shared}/>}
@@ -238,523 +246,329 @@ export default function AgendaIA() {
         {!loading&&tab==="jarvis"  &&<JarvisTab  {...shared}/>}
       </div>
 
-      <BottomNav tab={tab} setTab={setTab}/>
+      {/* BOTTOM NAV */}
+      <div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:430,background:"rgba(15,15,16,.97)",backdropFilter:"blur(12px)",borderTop:"1px solid #1c1c1e",padding:"6px 0 max(6px,env(safe-area-inset-bottom))",display:"flex",zIndex:100}}>
+        {NAV.map(n=>{
+          const a=tab===n.id;
+          return(
+            <button key={n.id} onClick={()=>setTab(n.id)} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:2,background:"none",border:"none",cursor:"pointer",padding:"4px 0",color:a?"#a78bfa":"#4b4b4b",transition:"color .2s"}}>
+              <span style={{fontSize:18,lineHeight:1}}>{n.icon}</span>
+              <span style={{fontSize:9,fontWeight:a?600:400}}>{n.label}</span>
+            </button>
+          );
+        })}
+      </div>
 
       {toast&&(
-        <div style={{
-          position:"fixed",top:64,left:"50%",transform:"translateX(-50%)",
-          background:"rgba(0,20,40,.95)",
-          border:`1px solid ${toast.type==="err"?"#ff4466":"#00d4ff"}`,
-          color:toast.type==="err"?"#ff8899":"#00d4ff",
-          borderRadius:4,padding:"8px 18px",fontSize:12,fontWeight:500,
-          zIndex:999,whiteSpace:"nowrap",
-          boxShadow:`0 0 20px ${toast.type==="err"?"rgba(255,68,102,.3)":"rgba(0,212,255,.3)"}`,
-          letterSpacing:".06em",fontFamily:"'Orbitron',monospace",
-          animation:"toastIn .2s ease"
-        }}>{toast.msg}</div>
+        <div style={{position:"fixed",top:56,left:"50%",transform:"translateX(-50%)",background:toast.err?"#2a1a1a":"#1c1c1e",border:`1px solid ${toast.err?"#7f1d1d":"#2c2c2e"}`,color:toast.err?"#fca5a5":"#f5f5f5",borderRadius:8,padding:"9px 16px",fontSize:12,fontWeight:500,zIndex:999,whiteSpace:"nowrap",boxShadow:"0 4px 20px rgba(0,0,0,.4)",animation:"tin .2s ease"}}>
+          {toast.msg}
+        </div>
       )}
 
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@200;300;400;500;600;700&family=Orbitron:wght@400;500;700&display=swap');
-        @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-6px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
-        @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes scanline{from{transform:translateY(-100%)}to{transform:translateY(100vh)}}
+        @keyframes tin{from{opacity:0;transform:translateX(-50%) translateY(-6px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+        @keyframes fin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
         @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-        @keyframes glow{0%,100%{box-shadow:0 0 6px rgba(0,212,255,.4)}50%{box-shadow:0 0 14px rgba(0,212,255,.8)}}
-        @keyframes hudIn{from{opacity:0;transform:scaleX(.95)}to{opacity:1;transform:scaleX(1)}}
-        html,body{height:100%;overflow:hidden;position:fixed;width:100%;background:#020408}
+        html,body{height:100%;overflow:hidden;position:fixed;width:100%;background:#0f0f10}
         body{overscroll-behavior:none}
         *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
         ::-webkit-scrollbar{display:none}
         input,select,textarea{font-size:16px!important;-webkit-appearance:none}
         input[type=time],input[type=date]{color-scheme:dark}
-        ::placeholder{color:rgba(255,255,255,.2)!important}
-        button{font-family:'Exo 2',system-ui,sans-serif}
+        ::placeholder{color:#4b4b4b!important}
       `}</style>
     </div>
   );
 }
 
-// ── LOADING ─────────────────────────────────────────────────────
-function LoadingScreen() {
+// ── LOADER ──────────────────────────────────────────────────────
+function Loader(){
   return(
-    <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"60vh",gap:14}}>
-      <div style={{position:"relative",width:48,height:48}}>
-        <div style={{position:"absolute",inset:0,border:"1px solid rgba(0,212,255,.2)",borderRadius:"50%"}}/>
-        <div style={{position:"absolute",inset:0,border:"1px solid transparent",borderTopColor:"#00d4ff",borderRadius:"50%",animation:"spin 1s linear infinite"}}/>
-        <div style={{position:"absolute",inset:8,border:"1px solid transparent",borderTopColor:"rgba(0,212,255,.5)",borderRadius:"50%",animation:"spin .7s linear infinite reverse"}}/>
-      </div>
-      <div style={{fontSize:11,color:"rgba(0,212,255,.5)",letterSpacing:".2em",fontFamily:"'Orbitron',monospace"}}>INICIALIZANDO</div>
+    <div style={{display:"flex",alignItems:"center",justifyContent:"center",height:"50vh"}}>
+      <div style={{width:24,height:24,border:"2px solid #2c2c2e",borderTop:"2px solid #a78bfa",borderRadius:"50%",animation:"spin 1s linear infinite"}}/>
     </div>
   );
 }
 
-// ── TOPBAR ──────────────────────────────────────────────────────
-function TopBar({now,progress,done,current,nextItem}) {
-  const catC = current ? CAT_C[current.cat]||"#00d4ff" : "#00d4ff";
-
-  return(
-    <div style={{
-      padding:"10px 16px 10px",
-      background:"rgba(14,14,18,.95)",
-      backdropFilter:"blur(16px)",
-      borderBottom:"1px solid rgba(255,255,255,.06)",
-      flexShrink:0,position:"relative",zIndex:10
-    }}>
-      {/* Corner decorations */}
-      <div style={{position:"absolute",top:0,left:0,width:12,height:12,borderTop:"1px solid #00d4ff",borderLeft:"1px solid #00d4ff"}}/>
-      <div style={{position:"absolute",top:0,right:0,width:12,height:12,borderTop:"1px solid #00d4ff",borderRight:"1px solid #00d4ff"}}/>
-
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}>
-        <div style={{flex:1,minWidth:0}}>
-          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
-            <span style={{fontSize:10,fontFamily:"'Orbitron',monospace",fontWeight:700,color:"rgba(0,212,255,.6)",letterSpacing:".15em"}}>J.A.R.V.I.S</span>
-            <div style={{width:4,height:4,borderRadius:"50%",background:"#00d4ff",animation:"pulse 2s infinite"}}/>
-            <span style={{fontSize:9,color:"rgba(180,180,200,.35)",letterSpacing:".1em"}}>ONLINE</span>
-          </div>
-          <div style={{fontSize:16,fontWeight:600,color:"#f0f0f2",lineHeight:1.2,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>
-            {current ? `${current.icon} ${current.label}` : "Bem-vindo, Wanderson"}
-          </div>
-          <div style={{fontSize:10,color:"rgba(0,212,255,.4)",marginTop:2,letterSpacing:".04em"}}>{fmtDate(now).toUpperCase()} · {fmtTime(now)}</div>
-        </div>
-
-        {/* HUD Progress Arc */}
-        <div style={{position:"relative",width:60,height:60,flexShrink:0}}>
-          <svg width="60" height="60" style={{transform:"rotate(-90deg)"}}>
-            <circle cx="30" cy="30" r="24" fill="none" stroke="rgba(0,212,255,.1)" strokeWidth="2"/>
-            <circle cx="30" cy="30" r="24" fill="none"
-              stroke={progress>=80?"#00ffaa":progress>=40?"#00d4ff":"#aa88ff"}
-              strokeWidth="2" strokeLinecap="round"
-              strokeDasharray={2*Math.PI*24}
-              strokeDashoffset={2*Math.PI*24-(progress/100)*2*Math.PI*24}
-              style={{transition:"stroke-dashoffset .6s ease",filter:`drop-shadow(0 0 4px ${progress>=80?"#00ffaa":progress>=40?"#00d4ff":"#aa88ff"})`}}/>
-            {/* tick marks */}
-            {[0,1,2,3].map(i=>(
-              <line key={i}
-                x1={30+26*Math.cos((i*90-90)*Math.PI/180)} y1={30+26*Math.sin((i*90-90)*Math.PI/180)}
-                x2={30+22*Math.cos((i*90-90)*Math.PI/180)} y2={30+22*Math.sin((i*90-90)*Math.PI/180)}
-                stroke="rgba(0,212,255,.3)" strokeWidth="1"/>
-            ))}
-          </svg>
-          <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
-            <div style={{fontSize:13,fontWeight:700,fontFamily:"'Orbitron',monospace",color:"#f0f0f2",lineHeight:1}}>{progress}%</div>
-            <div style={{fontSize:8,color:"rgba(0,212,255,.4)",letterSpacing:".06em"}}>{done}/{ROUTINE.length}</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Status bar */}
-      {nextItem&&(
-        <div style={{
-          display:"flex",alignItems:"center",gap:8,
-          marginTop:8,padding:"5px 8px",
-          background:"rgba(0,212,255,.04)",
-          border:"1px solid rgba(0,212,255,.08)",
-          borderRadius:3,animation:"hudIn .3s ease"
-        }}>
-          <div style={{width:5,height:5,borderRadius:1,background:catC,flexShrink:0,animation:"pulse 2s infinite"}}/>
-          <span style={{fontSize:10,color:"rgba(0,212,255,.5)",letterSpacing:".06em"}}>PROXIMO</span>
-          <span style={{fontSize:10,fontWeight:600,color:catC,letterSpacing:".04em"}}>{nextItem.time} — {nextItem.label.toUpperCase()}</span>
-        </div>
-      )}
-    </div>
-  );
+// ── SHARED PRIMITIVES ───────────────────────────────────────────
+function Inp({style,...p}){
+  return <input style={{width:"100%",background:"#1c1c1e",border:"none",borderRadius:8,padding:"10px 12px",color:"#f5f5f5",fontSize:16,outline:"none",display:"block",...style}} {...p}/>;
 }
-
-// ── BOTTOM NAV ──────────────────────────────────────────────────
-function BottomNav({tab,setTab}) {
-  return(
-    <div style={{
-      position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",
-      width:"100%",maxWidth:430,
-      background:"rgba(10,10,13,.97)",backdropFilter:"blur(20px)",
-      borderTop:"1px solid rgba(255,255,255,.07)",
-      padding:"6px 0 max(6px,env(safe-area-inset-bottom))",
-      display:"flex",zIndex:100
-    }}>
-      {NAV.map(n=>{
-        const active=tab===n.id;
-        return(
-          <button key={n.id} onClick={()=>setTab(n.id)} style={{
-            flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:2,
-            background:"none",border:"none",cursor:"pointer",padding:"4px 2px",transition:"all .2s",
-            color:active?"#00d4ff":"rgba(0,180,220,.25)"
-          }}>
-            <div style={{
-              width:34,height:34,borderRadius:6,
-              background:active?"rgba(0,212,255,.1)":"transparent",
-              border:active?"1px solid rgba(0,212,255,.3)":"1px solid transparent",
-              display:"flex",alignItems:"center",justifyContent:"center",transition:"all .25s",
-              boxShadow:active?"0 0 12px rgba(0,212,255,.2)":undefined
-            }}>{n.svg||n.icon}</div>
-            <span style={{fontSize:8,fontWeight:active?700:400,letterSpacing:".08em",fontFamily:"'Orbitron',monospace"}}>{n.label.substring(0,7)}</span>
-          </button>
-        );
-      })}
-    </div>
-  );
+function Sel({style,children,...p}){
+  return <select style={{width:"100%",background:"#1c1c1e",border:"none",borderRadius:8,padding:"10px 12px",color:"#f5f5f5",fontSize:16,outline:"none",display:"block",...style}} {...p}>{children}</select>;
 }
-
-// ─── SHARED primitives ───────────────────────────────────────────
-const C = "#00d4ff";
-function HLine() { return <div style={{height:"1px",background:"linear-gradient(90deg,transparent,rgba(0,212,255,.3),transparent)",margin:"10px 0"}}/>; }
-function SectionLabel({children}) { return <div style={{fontSize:9,fontFamily:"'Orbitron',monospace",color:"rgba(180,180,200,.35)",letterSpacing:".14em",marginBottom:10}}>{children}</div>; }
-function HudBox({children,style,accent}) {
-  const ac = accent||C;
+function Btn({children,onClick,color,ghost,small,style,disabled}){
+  const c=color||"#a78bfa";
   return(
-    <div style={{background:"rgba(16,16,20,.9)",border:`1px solid ${ac}22`,borderRadius:4,padding:"12px 14px",position:"relative",...style}}>
-      <div style={{position:"absolute",top:0,left:0,width:8,height:8,borderTop:`1px solid ${ac}`,borderLeft:`1px solid ${ac}`}}/>
-      <div style={{position:"absolute",bottom:0,right:0,width:8,height:8,borderBottom:`1px solid ${ac}`,borderRight:`1px solid ${ac}`}}/>
+    <button onClick={onClick} disabled={disabled} style={{background:ghost?"transparent":c,color:ghost?c:"#000",border:ghost?`1px solid ${c}33`:"none",borderRadius:8,padding:small?"6px 12px":"10px 18px",fontSize:small?11:13,fontWeight:600,cursor:disabled?"default":"pointer",opacity:disabled?.4:1,transition:"opacity .2s",...style}}>
       {children}
+    </button>
+  );
+}
+function Tag({children,color}){
+  return <span style={{fontSize:10,fontWeight:500,padding:"2px 7px",borderRadius:4,background:`${color}18`,color}}>{children}</span>;
+}
+function Bar({pct,color,h=4}){
+  return(
+    <div style={{height:h,background:"#2c2c2e",borderRadius:99,overflow:"hidden"}}>
+      <div style={{height:h,borderRadius:99,width:`${Math.min(pct,100)}%`,background:color||"#a78bfa",transition:"width .6s ease"}}/>
     </div>
   );
 }
-function GlowBtn({children,onClick,color,outline,small,style,disabled}) {
-  const c=color||C;
-  return(
-    <button onClick={onClick} disabled={disabled} style={{
-      background:outline?"transparent":`${c}18`,
-      border:`1px solid ${c}${outline?"66":"44"}`,
-      color:c,borderRadius:3,
-      padding:small?"4px 10px":"9px 16px",
-      fontSize:small?10:12,fontWeight:600,cursor:disabled?"default":"pointer",
-      letterSpacing:".06em",fontFamily:"'Exo 2',sans-serif",
-      boxShadow:disabled?"none":`0 0 8px ${c}22`,
-      transition:"all .2s",opacity:disabled?.4:1,...style
-    }}>{children}</button>
-  );
-}
-function DataInput({style,...props}) {
-  return <input style={{
-    width:"100%",background:"rgba(255,255,255,.05)",
-    border:"1px solid rgba(0,212,255,.15)",borderRadius:3,
-    padding:"9px 11px",color:"#f0f0f2",fontSize:16,outline:"none",display:"block",
-    fontFamily:"'Exo 2',sans-serif",letterSpacing:".02em",...style
-  }} {...props}/>;
-}
-function DataSelect({style,children,...props}) {
-  return <select style={{
-    width:"100%",background:"rgba(255,255,255,.06)",
-    border:"1px solid rgba(0,212,255,.15)",borderRadius:3,
-    padding:"9px 11px",color:"#f0f0f2",fontSize:16,outline:"none",display:"block",
-    fontFamily:"'Exo 2',sans-serif",...style
-  }} {...props}>{children}</select>;
-}
-function ProgBar({pct,color,height=4}) {
-  const c=color||C;
-  return(
-    <div style={{height,background:"rgba(0,212,255,.06)",borderRadius:99,overflow:"hidden",position:"relative"}}>
-      <div style={{height:"100%",borderRadius:99,width:`${Math.min(pct,100)}%`,background:`linear-gradient(90deg,${c}88,${c})`,transition:"width .7s ease",boxShadow:pct>=100?`0 0 8px ${c}`:undefined}}/>
-      {pct>=100&&<div style={{position:"absolute",inset:0,background:`linear-gradient(90deg,transparent,${c}22,transparent)`,animation:"scanline 1.5s linear infinite"}}/>}
-    </div>
-  );
-}
-function EmptyHud({label}) {
-  return(
-    <div style={{textAlign:"center",padding:"36px 20px"}}>
-      <div style={{fontSize:9,fontFamily:"'Orbitron',monospace",color:"rgba(180,180,200,.25)",letterSpacing:".2em",marginBottom:8}}>SISTEMA VAZIO</div>
-      <div style={{fontSize:12,color:"rgba(180,180,200,.4)"}}>{label}</div>
-    </div>
-  );
-}
-
-const fldL = {fontSize:10,color:"rgba(0,212,255,.4)",marginBottom:4,letterSpacing:".08em",fontFamily:"'Orbitron',monospace"};
+function Div(){return <div style={{height:1,background:"#1c1c1e",margin:"4px 0"}}/>;}
+function SecLabel({children}){return <div style={{fontSize:11,fontWeight:600,color:"#6b6b6b",textTransform:"uppercase",letterSpacing:".06em",padding:"16px 16px 8px"}}>{children}</div>;}
+function Empty({text}){return <div style={{textAlign:"center",padding:"40px 16px",fontSize:13,color:"#4b4b4b"}}>{text}</div>;}
 
 // ════════════════════════════════════════════════════════════════
-// HOME TAB
+// HOME
 // ════════════════════════════════════════════════════════════════
-function HomeTab({setTab,tarefas,metas,checked,progress,done,current,nextItem,now}) {
-  const pend  = tarefas.filter(t=>!t.done).length;
-  const aMetA = metas.length?Math.round(metas.reduce((s,m)=>s+(Number(m.current_val)/Math.max(Number(m.target),1))*100,0)/metas.length):0;
-  const hour  = now.getHours();
-  const saud  = hour<12?"BOAS OPERACOES":hour<18?"BOA TARDE":"BOA NOITE";
+function HomeTab({setTab,tarefas,metas,checked,progress,done,current,nextItem,now}){
+  const pend=tarefas.filter(t=>!t.done).length;
+  const avgM=metas.length?Math.round(metas.reduce((s,m)=>s+(Number(m.current_val)/Math.max(Number(m.target),1))*100,0)/metas.length):0;
+  const h=now.getHours();
+  const greet=h<12?"Bom dia":h<18?"Boa tarde":"Boa noite";
 
   return(
-    <div style={{padding:"16px 16px 0",animation:"fadeUp .35s ease"}}>
-      {/* Greeting */}
-      <div style={{marginBottom:18}}>
-        <div style={{fontSize:9,fontFamily:"'Orbitron',monospace",color:"rgba(0,212,255,.4)",letterSpacing:".2em",marginBottom:6}}>{saud}, WANDERSON</div>
-        <div style={{fontSize:22,fontWeight:700,color:"#f0f0f2",lineHeight:1.15}}>Central de<br/>Comando</div>
-        <div style={{fontSize:10,color:"rgba(180,180,200,.4)",marginTop:4,letterSpacing:".04em"}}>{fmtDate(now).toUpperCase()}</div>
+    <div style={{animation:"fin .25s ease"}}>
+      <div style={{padding:"16px 16px 8px"}}>
+        <div style={{fontSize:22,fontWeight:700,color:"#f5f5f5",marginBottom:2}}>{greet} 👋</div>
+        <div style={{fontSize:13,color:"#6b6b6b"}}>Quarta-feira, 21 de maio</div>
       </div>
 
-      {/* Stats grid */}
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:14}}>
+      {/* 4 stat cards */}
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:1,background:"#1c1c1e",border:"1px solid #1c1c1e",borderRadius:12,margin:"12px 16px",overflow:"hidden"}}>
         {[
-          {l:"MISSOES HOJE",    v:`${done}/${ROUTINE.length}`, c:"#00d4ff", sub:`${progress}% do dia`, tab:"rotina"},
-          {l:"OPS PENDENTES",  v:pend,                         c:"#ffcc44", sub:"operacoes ativas",    tab:"tarefas"},
-          {l:"ALVOS ATIVOS",   v:metas.filter(m=>!m.done).length, c:"#aa88ff", sub:`media ${aMetA}%`, tab:"metas"},
-          {l:"STATUS IA",      v:"ONLINE",                     c:"#00ffaa", sub:"J.A.R.V.I.S pronto",  tab:"jarvis"},
-        ].map(s=>(
-          <button key={s.l} onClick={()=>setTab(s.tab)} style={{background:"none",border:"none",cursor:"pointer",padding:0,textAlign:"left"}}>
-            <HudBox accent={s.c} style={{height:"100%"}}>
-              <div style={{fontSize:8,fontFamily:"'Orbitron',monospace",color:`${s.c}88`,letterSpacing:".12em",marginBottom:4}}>{s.l}</div>
-              <div style={{fontSize:20,fontWeight:700,color:s.c,lineHeight:1,fontFamily:"'Orbitron',monospace"}}>{s.v}</div>
-              <div style={{fontSize:10,color:"rgba(180,180,200,.4)",marginTop:3}}>{s.sub}</div>
-            </HudBox>
+          {l:"Rotina",    v:`${done}/${ROUTINE.length}`,sub:`${progress}%`,  c:"#a78bfa",tab:"rotina"},
+          {l:"Tarefas",   v:pend,              sub:"pendentes",              c:"#facc15",tab:"tarefas"},
+          {l:"Metas",     v:metas.filter(m=>!m.done).length,sub:`${avgM}% médio`,c:"#4ade80",tab:"metas"},
+          {l:"J.A.R.V.I.S",v:"Online",         sub:"pronto",                 c:"#60a5fa",tab:"jarvis"},
+        ].map((s,i)=>(
+          <button key={s.l} onClick={()=>setTab(s.tab)} style={{background:"#0f0f10",border:"none",cursor:"pointer",padding:"14px 14px",textAlign:"left",transition:"background .2s"}}>
+            <div style={{fontSize:11,color:"#6b6b6b",marginBottom:4,fontWeight:500}}>{s.l}</div>
+            <div style={{fontSize:20,fontWeight:700,color:s.c,lineHeight:1}}>{s.v}</div>
+            <div style={{fontSize:11,color:"#4b4b4b",marginTop:3}}>{s.sub}</div>
           </button>
         ))}
       </div>
 
-      {/* Progress visual */}
-      <HudBox style={{marginBottom:12}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
-          <SectionLabel>PROGRESSO DO DIA</SectionLabel>
-          <span style={{fontSize:16,fontWeight:700,fontFamily:"'Orbitron',monospace",color:progress>=80?"#00ffaa":progress>=40?"#00d4ff":"#aa88ff"}}>{progress}%</span>
+      {/* Progress bar */}
+      <div style={{padding:"0 16px",marginBottom:16}}>
+        <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
+          <span style={{fontSize:12,color:"#6b6b6b"}}>Progresso do dia</span>
+          <span style={{fontSize:12,fontWeight:600,color:"#f5f5f5"}}>{progress}%</span>
         </div>
-        <ProgBar pct={progress} color={progress>=80?"#00ffaa":progress>=40?"#00d4ff":"#aa88ff"} height={6}/>
-        {current&&(
-          <div style={{display:"flex",alignItems:"center",gap:7,marginTop:10}}>
-            <div style={{width:5,height:5,borderRadius:1,background:CAT_C[current.cat]||C,animation:"pulse 2s infinite"}}/>
-            <span style={{fontSize:10,color:CAT_C[current.cat]||C,fontWeight:600}}>{current.icon} {current.label}</span>
-          </div>
-        )}
-      </HudBox>
+        <Bar pct={progress} color={progress>=80?"#4ade80":progress>=40?"#a78bfa":"#60a5fa"} h={6}/>
+      </div>
 
-      {/* Next mission */}
+      {/* Next */}
       {nextItem&&(
-        <HudBox accent="#ffcc44" style={{marginBottom:12}}>
-          <SectionLabel>PROXIMA MISSAO</SectionLabel>
-          <div style={{display:"flex",alignItems:"center",gap:12}}>
-            <div style={{width:40,height:40,borderRadius:3,background:"rgba(255,204,68,.1)",border:"1px solid rgba(255,204,68,.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{nextItem.icon}</div>
-            <div>
-              <div style={{fontSize:13,fontWeight:600,color:"#f0f0f2"}}>{nextItem.label}</div>
-              <div style={{fontSize:10,color:"rgba(0,212,255,.4)",marginTop:2}}>{nextItem.time} · {nextItem.desc.substring(0,36)}...</div>
+        <>
+          <SecLabel>Próxima missão</SecLabel>
+          <div onClick={()=>setTab("rotina")} style={{margin:"0 16px",padding:"12px 14px",background:"#1c1c1e",borderRadius:10,display:"flex",alignItems:"center",gap:12,cursor:"pointer"}}>
+            <div style={{width:38,height:38,borderRadius:9,background:`${CAT_COLOR[nextItem.cat]||"#a78bfa"}18`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{nextItem.icon}</div>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontSize:14,fontWeight:500,color:"#f5f5f5"}}>{nextItem.label}</div>
+              <div style={{fontSize:11,color:"#6b6b6b",marginTop:1}}>{nextItem.time} · {nextItem.desc.substring(0,40)}...</div>
             </div>
+            <span style={{fontSize:10,color:CAT_COLOR[nextItem.cat]||"#a78bfa",fontWeight:500}}>{nextItem.cat}</span>
           </div>
-        </HudBox>
+        </>
       )}
 
-      {/* Pending tasks */}
+      {/* Pending tasks preview */}
       {pend>0&&(
-        <HudBox style={{marginBottom:16}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
-            <SectionLabel>OPS PENDENTES</SectionLabel>
-            <button onClick={()=>setTab("tarefas")} style={{fontSize:9,fontFamily:"'Orbitron',monospace",color:"rgba(0,212,255,.5)",background:"none",border:"none",cursor:"pointer",letterSpacing:".08em"}}>VER TUDO</button>
+        <>
+          <SecLabel>Tarefas de hoje</SecLabel>
+          <div style={{margin:"0 16px",background:"#1c1c1e",borderRadius:10,overflow:"hidden"}}>
+            {tarefas.filter(t=>!t.done).slice(0,4).map((t,i,arr)=>(
+              <div key={t.id} style={{display:"flex",alignItems:"center",gap:10,padding:"11px 14px",borderBottom:i<arr.length-1?"1px solid #2c2c2e":"none"}}>
+                <div style={{width:5,height:5,borderRadius:"50%",background:TAG_COLORS[t.tag]||"#a78bfa",flexShrink:0}}/>
+                <span style={{fontSize:13,color:"#e5e5e5",flex:1,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{t.title}</span>
+                {t.reminder_time&&<span style={{fontSize:10,color:"#4b4b4b"}}>{t.reminder_time}</span>}
+              </div>
+            ))}
+            {pend>4&&<div onClick={()=>setTab("tarefas")} style={{padding:"10px 14px",fontSize:12,color:"#a78bfa",cursor:"pointer",textAlign:"center"}}>Ver todas ({pend}) →</div>}
           </div>
-          {tarefas.filter(t=>!t.done).slice(0,4).map((t,i)=>(
-            <div key={t.id} style={{display:"flex",alignItems:"center",gap:8,padding:"5px 0",borderBottom:"1px solid rgba(0,212,255,.05)"}}>
-              <div style={{width:4,height:4,borderRadius:1,background:TAG_COLORS[t.tag]||C,flexShrink:0}}/>
-              <span style={{fontSize:12,color:"rgba(224,240,255,.7)",flex:1,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{t.title}</span>
-              {t.reminder_time&&<span style={{fontSize:9,color:"rgba(180,180,200,.4)"}}>{t.reminder_time}</span>}
-            </div>
-          ))}
-        </HudBox>
+        </>
       )}
     </div>
   );
 }
 
 // ════════════════════════════════════════════════════════════════
-// ROTINA TAB
+// ROTINA
 // ════════════════════════════════════════════════════════════════
-function RotinaTab({checked,toggleCheck}) {
-  const [selCat,setSelCat] = useState("TODOS");
-  const cats = ["TODOS",...Object.keys(CAT_C)];
-  const filtered = selCat==="TODOS"?ROUTINE:ROUTINE.filter(r=>r.cat===selCat);
+function RotinaTab({checked,toggleCheck}){
+  const [selCat,setSelCat]=useState("Todas");
+  const cats=["Todas",...Object.keys(CAT_COLOR)];
+  const list=selCat==="Todas"?ROUTINE:ROUTINE.filter(r=>r.cat===selCat);
 
   return(
-    <div style={{padding:"14px 16px 0",animation:"fadeUp .35s ease"}}>
-      <div style={{display:"flex",gap:5,overflowX:"auto",paddingBottom:10,marginBottom:12,scrollbarWidth:"none"}}>
+    <div style={{animation:"fin .25s ease"}}>
+      {/* Cat filter */}
+      <div style={{display:"flex",gap:6,overflowX:"auto",padding:"12px 16px 8px",scrollbarWidth:"none"}}>
         {cats.map(c=>{
-          const active=selCat===c;
-          const cc=CAT_C[c]||C;
+          const a=selCat===c;
+          const cc=CAT_COLOR[c];
           return(
-            <button key={c} onClick={()=>setSelCat(c)} style={{
-              fontSize:8,fontFamily:"'Orbitron',monospace",letterSpacing:".1em",
-              padding:"5px 10px",borderRadius:2,whiteSpace:"nowrap",flexShrink:0,
-              background:active?`${cc}18`:"rgba(0,20,40,.6)",
-              color:active?cc:"rgba(255,255,255,.25)",
-              border:`1px solid ${active?`${cc}55`:"rgba(0,212,255,.1)"}`,
-              cursor:"pointer",transition:"all .2s"
-            }}>{c}</button>
+            <button key={c} onClick={()=>setSelCat(c)} style={{fontSize:11,fontWeight:500,padding:"5px 12px",borderRadius:20,whiteSpace:"nowrap",flexShrink:0,background:a?`${cc}18`:"#1c1c1e",color:a?cc:"#6b6b6b",border:"none",cursor:"pointer",transition:"all .2s"}}>
+              {c}
+            </button>
           );
         })}
       </div>
 
-      {filtered.map((item,idx)=>{
-        const ck=!!checked[item.id];
-        const cc=CAT_C[item.cat]||C;
-        const nm=new Date().getHours()*60+new Date().getMinutes();
-        const next=ROUTINE[ROUTINE.indexOf(item)+1];
-        const isActive=nm>=t2m(item.time)&&(!next||nm<t2m(next.time))&&!ck;
-
-        return(
-          <div key={item.id} onClick={()=>toggleCheck(item.id)}
-            style={{
-              display:"flex",gap:10,alignItems:"center",
-              background:isActive?`${cc}08`:"rgba(0,12,28,.6)",
-              borderLeft:`2px solid ${ck?"rgba(0,212,255,.08)":cc}`,
-              borderTop:"1px solid rgba(0,212,255,.04)",
-              borderRight:"1px solid rgba(0,212,255,.04)",
-              borderBottom:"1px solid rgba(0,212,255,.04)",
-              borderRadius:"0 3px 3px 0",
-              padding:"10px 12px",marginBottom:5,
-              cursor:"pointer",opacity:ck?.35:1,transition:"all .2s",
-              boxShadow:isActive?`inset 0 0 20px ${cc}08`:undefined,
-              animation:`fadeUp .2s ease ${idx*.02}s both`
+      <div style={{margin:"0 16px",background:"#1c1c1e",borderRadius:10,overflow:"hidden"}}>
+        {list.map((item,i)=>{
+          const ck=!!checked[item.id];
+          const cc=CAT_COLOR[item.cat]||"#a78bfa";
+          const nm=new Date().getHours()*60+new Date().getMinutes();
+          const next=ROUTINE[ROUTINE.indexOf(item)+1];
+          const isNow=nm>=t2m(item.time)&&(!next||nm<t2m(next.time))&&!ck;
+          return(
+            <div key={item.id} onClick={()=>toggleCheck(item.id)} style={{
+              display:"flex",alignItems:"center",gap:12,padding:"11px 14px",
+              borderBottom:i<list.length-1?"1px solid #2c2c2e":"none",
+              cursor:"pointer",background:isNow?"rgba(167,139,250,.06)":"transparent",
+              opacity:ck?.4:1,transition:"opacity .2s"
             }}>
-            <div style={{minWidth:36,textAlign:"right"}}>
-              <span style={{fontSize:10,fontFamily:"'Orbitron',monospace",color:ck?"rgba(0,212,255,.15)":cc,letterSpacing:".04em"}}>{item.time}</span>
+              {/* Check */}
+              <div style={{width:20,height:20,borderRadius:6,flexShrink:0,background:ck?cc:"transparent",border:`1.5px solid ${ck?cc:"#3c3c3e"}`,display:"flex",alignItems:"center",justifyContent:"center",transition:"all .2s"}}>
+                {ck&&<svg viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="3" style={{width:11,height:11}}><polyline points="20 6 9 17 4 12"/></svg>}
+              </div>
+              <span style={{fontSize:16,flexShrink:0}}>{item.icon}</span>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:13,fontWeight:isNow?600:400,color:ck?"#4b4b4b":"#f5f5f5",textDecoration:ck?"line-through":"none",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{item.label}</div>
+                <div style={{fontSize:10,color:"#4b4b4b",marginTop:1}}>{item.time} · {item.desc.substring(0,36)}...</div>
+              </div>
+              {isNow&&<div style={{width:6,height:6,borderRadius:"50%",background:cc,flexShrink:0}}/>}
+              <span style={{fontSize:10,color:cc,fontWeight:500,flexShrink:0}}>{item.cat}</span>
             </div>
-            <div style={{
-              width:16,height:16,borderRadius:2,flexShrink:0,
-              background:ck?`${cc}33`:"transparent",
-              border:`1px solid ${ck?cc:"rgba(0,212,255,.2)"}`,
-              display:"flex",alignItems:"center",justifyContent:"center",transition:"all .2s",
-              boxShadow:ck?`0 0 6px ${cc}44`:undefined
-            }}>
-              {ck&&<svg viewBox="0 0 24 24" fill="none" stroke={cc} strokeWidth="3" style={{width:9,height:9}}><polyline points="20 6 9 17 4 12"/></svg>}
-            </div>
-            <div style={{width:28,height:28,borderRadius:3,background:`${cc}10`,border:`1px solid ${cc}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,flexShrink:0}}>{item.icon}</div>
-            <div style={{flex:1,minWidth:0}}>
-              <div style={{fontSize:12,fontWeight:600,color:ck?"rgba(0,212,255,.25)":"#e0f0ff",textDecoration:ck?"line-through":"none",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{item.label}</div>
-              <div style={{fontSize:9,color:"rgba(180,180,200,.3)",marginTop:1,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",letterSpacing:".02em"}}>{item.desc}</div>
-            </div>
-            <span style={{fontSize:8,fontFamily:"'Orbitron',monospace",padding:"2px 5px",borderRadius:2,background:`${cc}18`,color:cc,flexShrink:0,letterSpacing:".06em"}}>{item.cat}</span>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }
 
 // ════════════════════════════════════════════════════════════════
-// TAREFAS TAB
+// TAREFAS
 // ════════════════════════════════════════════════════════════════
-function TarefasTab({tarefas,addTarefa,toggleTarefa,removeTarefa,showToast}) {
-  const [form,setForm]   = useState({title:"",note:"",tag:"UPMIND",reminder_time:""});
-  const [open,setOpen]   = useState(false);
+function TarefasTab({tarefas,addTarefa,toggleTarefa,removeTarefa}){
+  const [form,setForm]=useState({title:"",note:"",tag:"UPMIND",reminder_time:""});
+  const [open,setOpen]=useState(false);
 
-  const add = async() => {
-    if(!form.title.trim()) return;
+  const add=async()=>{
+    if(!form.title.trim())return;
     await addTarefa(form);
     setForm({title:"",note:"",tag:"UPMIND",reminder_time:""});
     setOpen(false);
   };
 
-  const pending = tarefas.filter(t=>!t.done);
-  const done    = tarefas.filter(t=>t.done);
+  const pend=tarefas.filter(t=>!t.done);
+  const done=tarefas.filter(t=>t.done);
 
   return(
-    <div style={{padding:"14px 16px 0",animation:"fadeUp .35s ease"}}>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginBottom:14}}>
-        {[
-          {l:"TOTAL",     v:tarefas.length, c:C},
-          {l:"PENDENTE",  v:pending.length, c:"#ffcc44"},
-          {l:"CONCLUIDO", v:done.length,    c:"#00ffaa"},
-        ].map(s=>(
-          <HudBox key={s.l} accent={s.c} style={{padding:"8px 10px"}}>
-            <div style={{fontSize:16,fontWeight:700,fontFamily:"'Orbitron',monospace",color:s.c}}>{s.v}</div>
-            <div style={{fontSize:8,color:"rgba(180,180,200,.4)",fontFamily:"'Orbitron',monospace",letterSpacing:".1em",marginTop:2}}>{s.l}</div>
-          </HudBox>
+    <div style={{animation:"fin .25s ease"}}>
+      {/* Stats */}
+      <div style={{display:"flex",gap:1,background:"#1c1c1e",margin:"12px 16px",borderRadius:10,overflow:"hidden"}}>
+        {[{l:"Total",v:tarefas.length},{l:"Pendentes",v:pend.length},{l:"Feitas",v:done.length}].map(s=>(
+          <div key={s.l} style={{flex:1,padding:"10px 12px",background:"#0f0f10",textAlign:"center"}}>
+            <div style={{fontSize:18,fontWeight:700,color:"#f5f5f5"}}>{s.v}</div>
+            <div style={{fontSize:10,color:"#6b6b6b",marginTop:2}}>{s.l}</div>
+          </div>
         ))}
       </div>
 
+      {/* Form */}
       {open&&(
-        <HudBox style={{marginBottom:12,animation:"hudIn .2s ease"}}>
-          <SectionLabel>NOVA OPERACAO</SectionLabel>
-          <DataInput value={form.title} onChange={e=>setForm(f=>({...f,title:e.target.value}))} onKeyDown={e=>e.key==="Enter"&&add()} placeholder="Titulo da operacao..." autoFocus/>
-          <DataInput value={form.note} onChange={e=>setForm(f=>({...f,note:e.target.value}))} placeholder="Observacao..." style={{marginTop:6}}/>
+        <div style={{margin:"0 16px 12px",background:"#1c1c1e",borderRadius:10,padding:14,animation:"fin .2s ease"}}>
+          <Inp value={form.title} onChange={e=>setForm(f=>({...f,title:e.target.value}))} onKeyDown={e=>e.key==="Enter"&&add()} placeholder="Título da tarefa..." autoFocus/>
+          <Inp value={form.note} onChange={e=>setForm(f=>({...f,note:e.target.value}))} placeholder="Observação..." style={{marginTop:6}}/>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginTop:6}}>
-            <div><div style={fldL}>CATEGORIA</div><DataSelect value={form.tag} onChange={e=>setForm(f=>({...f,tag:e.target.value}))}>{Object.keys(TAG_COLORS).map(k=><option key={k}>{k}</option>)}</DataSelect></div>
-            <div><div style={fldL}>LEMBRETE</div><DataInput type="time" value={form.reminder_time} onChange={e=>setForm(f=>({...f,reminder_time:e.target.value}))}/></div>
+            <Sel value={form.tag} onChange={e=>setForm(f=>({...f,tag:e.target.value}))}>
+              {Object.keys(TAG_COLORS).map(k=><option key={k}>{k}</option>)}
+            </Sel>
+            <Inp type="time" value={form.reminder_time} onChange={e=>setForm(f=>({...f,reminder_time:e.target.value}))}/>
           </div>
           <div style={{display:"flex",gap:6,marginTop:10}}>
-            <GlowBtn onClick={add} style={{flex:1}}>EXECUTAR</GlowBtn>
-            <GlowBtn outline onClick={()=>setOpen(false)} style={{flex:1}}>CANCELAR</GlowBtn>
+            <Btn onClick={add} style={{flex:1}}>Adicionar</Btn>
+            <Btn ghost onClick={()=>setOpen(false)} style={{flex:1}}>Cancelar</Btn>
           </div>
-        </HudBox>
-      )}
-
-      {pending.length===0&&!open&&<EmptyHud label="Nenhuma operacao pendente"/>}
-      {pending.map((t,i)=><OpCard key={t.id} t={t} onToggle={toggleTarefa} onRemove={removeTarefa} idx={i}/>)}
-
-      {done.length>0&&(
-        <div style={{marginTop:16}}>
-          <SectionLabel>CONCLUIDAS ({done.length})</SectionLabel>
-          {done.map((t,i)=><OpCard key={t.id} t={t} onToggle={toggleTarefa} onRemove={removeTarefa} idx={i}/>)}
         </div>
       )}
 
+      {/* List */}
+      {pend.length===0&&!open&&<Empty text="Nenhuma tarefa pendente"/>}
+      {pend.length>0&&(
+        <div style={{margin:"0 16px",background:"#1c1c1e",borderRadius:10,overflow:"hidden"}}>
+          {pend.map((t,i)=><TRow key={t.id} t={t} onToggle={toggleTarefa} onRemove={removeTarefa} last={i===pend.length-1}/>)}
+        </div>
+      )}
+
+      {done.length>0&&(
+        <>
+          <SecLabel>Concluídas ({done.length})</SecLabel>
+          <div style={{margin:"0 16px",background:"#1c1c1e",borderRadius:10,overflow:"hidden"}}>
+            {done.map((t,i)=><TRow key={t.id} t={t} onToggle={toggleTarefa} onRemove={removeTarefa} last={i===done.length-1}/>)}
+          </div>
+        </>
+      )}
+
+      {/* FAB */}
       {!open&&(
-        <button onClick={()=>setOpen(true)} style={{
-          position:"fixed",
-          bottom:"calc(72px + env(safe-area-inset-bottom,0px) + 14px)",right:16,
-          width:44,height:44,borderRadius:6,
-          background:"rgba(0,212,255,.12)",
-          border:"1px solid rgba(0,212,255,.4)",
-          color:"#00d4ff",cursor:"pointer",
-          display:"flex",alignItems:"center",justifyContent:"center",
-          boxShadow:"0 0 16px rgba(0,212,255,.3)",zIndex:50,
-          animation:"glow 2s infinite"
-        }}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{width:20,height:20}}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <button onClick={()=>setOpen(true)} style={{position:"fixed",bottom:"calc(70px + env(safe-area-inset-bottom,0px) + 14px)",right:16,width:44,height:44,borderRadius:13,background:"#a78bfa",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 12px rgba(167,139,250,.4)",zIndex:50}}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" style={{width:20,height:20}}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
       )}
     </div>
   );
 }
 
-function OpCard({t,onToggle,onRemove,idx}) {
-  const c=TAG_COLORS[t.tag]||C;
+function TRow({t,onToggle,onRemove,last}){
+  const c=TAG_COLORS[t.tag]||"#a78bfa";
   return(
-    <div style={{
-      display:"flex",gap:10,alignItems:"flex-start",
-      background:"#111115",
-      borderLeft:`2px solid ${t.done?"rgba(0,212,255,.08)":c}`,
-      border:"1px solid rgba(255,255,255,.05)",
-      borderRadius:"0 3px 3px 0",padding:"10px 12px",marginBottom:5,
-      opacity:t.done?.3:1,animation:`fadeUp .2s ease ${idx*.03}s both`,transition:"opacity .2s"
-    }}>
-      <div onClick={()=>onToggle(t.id)} style={{
-        width:16,height:16,borderRadius:2,flexShrink:0,marginTop:2,
-        background:t.done?`${c}33`:"transparent",
-        border:`1px solid ${t.done?c:"rgba(0,212,255,.2)"}`,
-        display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",transition:"all .2s"
-      }}>
-        {t.done&&<svg viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="3" style={{width:9,height:9}}><polyline points="20 6 9 17 4 12"/></svg>}
+    <div style={{display:"flex",alignItems:"center",gap:10,padding:"11px 14px",borderBottom:last?"none":"1px solid #2c2c2e",opacity:t.done?.4:1}}>
+      <div onClick={()=>onToggle(t.id)} style={{width:20,height:20,borderRadius:6,flexShrink:0,background:t.done?c:"transparent",border:`1.5px solid ${t.done?c:"#3c3c3e"}`,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",transition:"all .2s"}}>
+        {t.done&&<svg viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="3" style={{width:11,height:11}}><polyline points="20 6 9 17 4 12"/></svg>}
       </div>
       <div style={{flex:1,minWidth:0}}>
-        <div style={{fontSize:13,fontWeight:500,color:t.done?"rgba(0,212,255,.2)":"#e0f0ff",textDecoration:t.done?"line-through":"none"}}>{t.title}</div>
-        {t.note&&<div style={{fontSize:10,color:"rgba(180,180,200,.4)",marginTop:2}}>{t.note}</div>}
-        <div style={{display:"flex",gap:6,marginTop:5,flexWrap:"wrap",alignItems:"center"}}>
-          <span style={{fontSize:8,fontFamily:"'Orbitron',monospace",padding:"2px 6px",borderRadius:2,background:`${c}18`,color:c,letterSpacing:".08em"}}>{t.tag}</span>
-          {t.reminder_time&&<span style={{fontSize:9,color:"rgba(180,180,200,.4)"}}>⏰ {t.reminder_time}</span>}
-          <span style={{fontSize:9,color:"rgba(255,255,255,.12)"}}>{fmtDT(t.created_at)}</span>
+        <div style={{fontSize:13,color:t.done?"#4b4b4b":"#f5f5f5",textDecoration:t.done?"line-through":"none",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{t.title}</div>
+        {t.note&&<div style={{fontSize:11,color:"#6b6b6b",marginTop:1}}>{t.note}</div>}
+        <div style={{display:"flex",gap:5,marginTop:4,flexWrap:"wrap",alignItems:"center"}}>
+          <Tag color={c}>{t.tag}</Tag>
+          {t.reminder_time&&<span style={{fontSize:10,color:"#6b6b6b"}}>⏰ {t.reminder_time}</span>}
         </div>
       </div>
-      <button onClick={()=>onRemove(t.id)} style={{background:"none",border:"none",color:"rgba(255,255,255,.12)",cursor:"pointer",fontSize:16,lineHeight:1,padding:0}}>×</button>
+      <button onClick={()=>onRemove(t.id)} style={{background:"none",border:"none",color:"#3c3c3e",cursor:"pointer",fontSize:18,padding:0,lineHeight:1}}>×</button>
     </div>
   );
 }
 
 // ════════════════════════════════════════════════════════════════
-// METAS TAB
+// METAS
 // ════════════════════════════════════════════════════════════════
-function MetasTab({metas,submetas,addMeta,updateMetaProgress,removeMeta,showToast,addSubmeta,updateSubmeta,toggleSubmeta,removeSubmeta}) {
-  const [selCat,setSelCat] = useState("TODOS");
-  const [detail,setDetail] = useState(null);
-  const [open,setOpen]     = useState(false);
-  const [form,setForm]     = useState({title:"",descricao:"",cat:"UPMIND",tipo:"Mensal",target:100,prazo:"",objetivo:""});
+function MetasTab({metas,submetas,addMeta,updateMetaProgress,removeMeta,addSubmeta,updateSubmeta,toggleSubmeta,removeSubmeta}){
+  const [selCat,setSelCat]=useState("Todas");
+  const [detail,setDetail]=useState(null);
+  const [open,setOpen]=useState(false);
+  const [form,setForm]=useState({title:"",descricao:"",cat:"UPMIND",tipo:"Mensal",target:100,prazo:"",objetivo:""});
 
-  const add = async() => {
-    if(!form.title.trim()) return;
+  const add=async()=>{
+    if(!form.title.trim())return;
     await addMeta(form);
     setForm({title:"",descricao:"",cat:"UPMIND",tipo:"Mensal",target:100,prazo:"",objetivo:""});
     setOpen(false);
   };
 
-  const cats = ["TODOS",...META_CATS];
-  const filtered = selCat==="TODOS"?metas:metas.filter(m=>m.cat===selCat);
-  const pending  = filtered.filter(m=>!m.done);
-  const done     = filtered.filter(m=>m.done);
-  const avg      = metas.length?Math.round(metas.reduce((s,m)=>s+(Number(m.current_val)/Math.max(Number(m.target),1))*100,0)/metas.length):0;
+  const cats=["Todas",...META_CATS];
+  const list=selCat==="Todas"?metas:metas.filter(m=>m.cat===selCat);
+  const pend=list.filter(m=>!m.done);
+  const done=list.filter(m=>m.done);
+  const avg=metas.length?Math.round(metas.reduce((s,m)=>s+(Number(m.current_val)/Math.max(Number(m.target),1))*100,0)/metas.length):0;
 
-  if(detail) return(
-    <MetaDetail
-      meta={detail} onBack={()=>setDetail(null)}
+  if(detail)return(
+    <MetaDetail meta={detail} onBack={()=>setDetail(null)}
       onProgress={updateMetaProgress} onRemove={removeMeta}
       submetas={submetas.filter(s=>s.meta_id===detail.id)}
       addSubmeta={addSubmeta} updateSubmeta={updateSubmeta}
@@ -762,198 +576,111 @@ function MetasTab({metas,submetas,addMeta,updateMetaProgress,removeMeta,showToas
   );
 
   return(
-    <div style={{padding:"14px 16px 0",animation:"fadeUp .35s ease"}}>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginBottom:14}}>
-        {[
-          {l:"TOTAL",   v:metas.length,                  c:C},
-          {l:"ATIVOS",  v:metas.filter(m=>!m.done).length, c:"#aa88ff"},
-          {l:"MEDIA",   v:avg+"%",                        c:"#ffcc44"},
-        ].map(s=>(
-          <HudBox key={s.l} accent={s.c} style={{padding:"8px 10px"}}>
-            <div style={{fontSize:16,fontWeight:700,fontFamily:"'Orbitron',monospace",color:s.c}}>{s.v}</div>
-            <div style={{fontSize:8,color:"rgba(180,180,200,.4)",fontFamily:"'Orbitron',monospace",letterSpacing:".1em",marginTop:2}}>{s.l}</div>
-          </HudBox>
+    <div style={{animation:"fin .25s ease"}}>
+      {/* Stats */}
+      <div style={{display:"flex",gap:1,background:"#1c1c1e",margin:"12px 16px",borderRadius:10,overflow:"hidden"}}>
+        {[{l:"Total",v:metas.length},{l:"Ativas",v:metas.filter(m=>!m.done).length},{l:"Média",v:avg+"%"}].map(s=>(
+          <div key={s.l} style={{flex:1,padding:"10px 12px",background:"#0f0f10",textAlign:"center"}}>
+            <div style={{fontSize:18,fontWeight:700,color:"#f5f5f5"}}>{s.v}</div>
+            <div style={{fontSize:10,color:"#6b6b6b",marginTop:2}}>{s.l}</div>
+          </div>
         ))}
       </div>
 
-      <div style={{display:"flex",gap:5,overflowX:"auto",paddingBottom:8,marginBottom:12,scrollbarWidth:"none"}}>
+      {/* Cat filter */}
+      <div style={{display:"flex",gap:6,overflowX:"auto",padding:"0 16px 10px",scrollbarWidth:"none"}}>
         {cats.map(c=>{
-          const active=selCat===c;
-          const cc=META_COLORS[c]||C;
+          const a=selCat===c;
+          const cc=META_COLORS[c]||"#a78bfa";
           return(
-            <button key={c} onClick={()=>setSelCat(c)} style={{
-              fontSize:8,fontFamily:"'Orbitron',monospace",letterSpacing:".08em",
-              padding:"5px 10px",borderRadius:2,whiteSpace:"nowrap",flexShrink:0,
-              background:active?`${cc}18`:"rgba(0,20,40,.6)",
-              color:active?cc:"rgba(255,255,255,.25)",
-              border:`1px solid ${active?`${cc}55`:"rgba(0,212,255,.1)"}`,
-              cursor:"pointer",transition:"all .2s"
-            }}>{META_ICONS[c]||""} {c}</button>
+            <button key={c} onClick={()=>setSelCat(c)} style={{fontSize:11,fontWeight:500,padding:"5px 12px",borderRadius:20,whiteSpace:"nowrap",flexShrink:0,background:a?`${cc}18`:"#1c1c1e",color:a?cc:"#6b6b6b",border:"none",cursor:"pointer",transition:"all .2s"}}>
+              {META_ICONS[c]||""} {c}
+            </button>
           );
         })}
       </div>
 
+      {/* Form */}
       {open&&(
-        <HudBox style={{marginBottom:12,animation:"hudIn .2s ease"}}>
-          <SectionLabel>NOVO ALVO</SectionLabel>
-          <DataInput value={form.title} onChange={e=>setForm(f=>({...f,title:e.target.value}))} placeholder="Alvo (ex: Ler 12 livros em 2026)..." autoFocus/>
-          <DataInput value={form.descricao} onChange={e=>setForm(f=>({...f,descricao:e.target.value}))} placeholder="Como vai medir..." style={{marginTop:6}}/>
-          <DataInput value={form.objetivo} onChange={e=>setForm(f=>({...f,objetivo:e.target.value}))} placeholder="Por que isso importa..." style={{marginTop:6}}/>
+        <div style={{margin:"0 16px 12px",background:"#1c1c1e",borderRadius:10,padding:14,animation:"fin .2s ease"}}>
+          <Inp value={form.title} onChange={e=>setForm(f=>({...f,title:e.target.value}))} placeholder="Meta (ex: Ler 12 livros em 2026)..." autoFocus/>
+          <Inp value={form.descricao} onChange={e=>setForm(f=>({...f,descricao:e.target.value}))} placeholder="Como vai medir..." style={{marginTop:6}}/>
+          <Inp value={form.objetivo} onChange={e=>setForm(f=>({...f,objetivo:e.target.value}))} placeholder="Por que isso importa..." style={{marginTop:6}}/>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginTop:6}}>
-            <div><div style={fldL}>CATEGORIA</div><DataSelect value={form.cat} onChange={e=>setForm(f=>({...f,cat:e.target.value}))}>{META_CATS.map(c=><option key={c}>{c}</option>)}</DataSelect></div>
-            <div><div style={fldL}>TIPO</div><DataSelect value={form.tipo} onChange={e=>setForm(f=>({...f,tipo:e.target.value}))}>{["Diaria","Semanal","Mensal","Trimestral","Anual"].map(t=><option key={t}>{t}</option>)}</DataSelect></div>
-            <div><div style={fldL}>META (N)</div><DataInput type="number" value={form.target} onChange={e=>setForm(f=>({...f,target:Number(e.target.value)}))}/></div>
-            <div><div style={fldL}>PRAZO</div><DataInput type="date" value={form.prazo} onChange={e=>setForm(f=>({...f,prazo:e.target.value}))}/></div>
+            <Sel value={form.cat} onChange={e=>setForm(f=>({...f,cat:e.target.value}))}>{META_CATS.map(c=><option key={c}>{c}</option>)}</Sel>
+            <Sel value={form.tipo} onChange={e=>setForm(f=>({...f,tipo:e.target.value}))}>{["Diária","Semanal","Mensal","Trimestral","Anual"].map(t=><option key={t}>{t}</option>)}</Sel>
+            <Inp type="number" value={form.target} onChange={e=>setForm(f=>({...f,target:Number(e.target.value)}))} placeholder="Meta (número)"/>
+            <Inp type="date" value={form.prazo} onChange={e=>setForm(f=>({...f,prazo:e.target.value}))}/>
           </div>
           <div style={{display:"flex",gap:6,marginTop:10}}>
-            <GlowBtn onClick={add} color="#aa88ff" style={{flex:1}}>REGISTRAR</GlowBtn>
-            <GlowBtn outline color="#aa88ff" onClick={()=>setOpen(false)} style={{flex:1}}>CANCELAR</GlowBtn>
-          </div>
-        </HudBox>
-      )}
-
-      {pending.length===0&&selCat==="TODOS"&&!open&&<EmptyHud label="Nenhum alvo registrado"/>}
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-        {pending.map((m,i)=><AlvoCard key={m.id} m={m} onPress={()=>setDetail(m)} onProgress={updateMetaProgress} onRemove={removeMeta} idx={i} subCount={submetas.filter(s=>s.meta_id===m.id).length} subDone={submetas.filter(s=>s.meta_id===m.id&&s.done).length}/>)}
-      </div>
-
-      {done.length>0&&(
-        <div style={{marginTop:16}}>
-          <SectionLabel>ALVOS ATINGIDOS ({done.length})</SectionLabel>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-            {done.map((m,i)=><AlvoCard key={m.id} m={m} onPress={()=>setDetail(m)} onProgress={updateMetaProgress} onRemove={removeMeta} idx={i} subCount={submetas.filter(s=>s.meta_id===m.id).length} subDone={submetas.filter(s=>s.meta_id===m.id&&s.done).length}/>)}
+            <Btn onClick={add} color="#4ade80" style={{flex:1}}>Criar meta</Btn>
+            <Btn ghost color="#4ade80" onClick={()=>setOpen(false)} style={{flex:1}}>Cancelar</Btn>
           </div>
         </div>
       )}
 
+      {/* Grid 2 cols */}
+      {pend.length===0&&selCat==="Todas"&&!open&&<Empty text="Nenhuma meta registrada"/>}
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,margin:"0 16px"}}>
+        {pend.map((m,i)=>(
+          <MetaCard key={m.id} m={m} onPress={()=>setDetail(m)} onProgress={updateMetaProgress} onRemove={removeMeta}
+            subCount={submetas.filter(s=>s.meta_id===m.id).length}
+            subDone={submetas.filter(s=>s.meta_id===m.id&&s.done).length}/>
+        ))}
+      </div>
+
+      {done.length>0&&(
+        <>
+          <SecLabel>Concluídas ({done.length})</SecLabel>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,margin:"0 16px"}}>
+            {done.map((m,i)=>(
+              <MetaCard key={m.id} m={m} onPress={()=>setDetail(m)} onProgress={updateMetaProgress} onRemove={removeMeta}
+                subCount={submetas.filter(s=>s.meta_id===m.id).length}
+                subDone={submetas.filter(s=>s.meta_id===m.id&&s.done).length}/>
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* FAB */}
       {!open&&(
-        <button onClick={()=>setOpen(true)} style={{
-          position:"fixed",bottom:"calc(72px + env(safe-area-inset-bottom,0px) + 14px)",right:16,
-          width:44,height:44,borderRadius:6,
-          background:"rgba(170,136,255,.12)",border:"1px solid rgba(170,136,255,.4)",
-          color:"#aa88ff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",
-          boxShadow:"0 0 16px rgba(170,136,255,.3)",zIndex:50,animation:"glow 2s infinite"
-        }}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{width:20,height:20}}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <button onClick={()=>setOpen(true)} style={{position:"fixed",bottom:"calc(70px + env(safe-area-inset-bottom,0px) + 14px)",right:16,width:44,height:44,borderRadius:13,background:"#4ade80",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 12px rgba(74,222,128,.35)",zIndex:50}}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2.5" style={{width:20,height:20}}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
       )}
     </div>
   );
 }
 
-function AlvoCard({m,onPress,onProgress,onRemove,idx,subCount,subDone}) {
-  const c=META_COLORS[m.cat]||"#aa88ff";
+function MetaCard({m,onPress,onProgress,onRemove,subCount,subDone}){
+  const c=META_COLORS[m.cat]||"#a78bfa";
   const pct=Math.round((Number(m.current_val)/Math.max(Number(m.target),1))*100);
   const [editing,setEditing]=useState(false);
   const [val,setVal]=useState(m.current_val);
 
   return(
-    <div style={{
-      background:"#111115",borderRadius:8,overflow:"hidden",
-      opacity:m.done?.45:1,animation:`fadeUp .2s ease ${idx*.04}s both`,
-      border:"1px solid rgba(255,255,255,.05)"
-    }}>
-      {/* Icon + % header */}
-      <div onClick={onPress} style={{
-        padding:"14px 12px 10px",cursor:"pointer",
-        background:`linear-gradient(135deg,${c}14,transparent)`,
-        position:"relative"
-      }}>
-        <button onClick={e=>{e.stopPropagation();onRemove(m.id);}} style={{position:"absolute",top:6,right:6,background:"none",border:"none",color:"rgba(255,255,255,.15)",cursor:"pointer",fontSize:13,lineHeight:1,padding:2}}>x</button>
-        <div style={{fontSize:26,marginBottom:5,filter:`drop-shadow(0 0 6px ${c}55)`}}>{META_ICONS[m.cat]||"X"}</div>
-        <div style={{fontSize:11,fontWeight:600,color:m.done?"rgba(255,255,255,.2)":"#f0f0f2",lineHeight:1.3,textDecoration:m.done?"line-through":"none",paddingRight:16}}>{m.title}</div>
-        {m.descricao&&<div style={{fontSize:9,color:"rgba(255,255,255,.25)",marginTop:2,lineHeight:1.3}}>{m.descricao.substring(0,35)}</div>}
-      </div>
-
-      {/* Value + bar */}
-      <div style={{padding:"0 12px 10px"}}>
+    <div style={{background:"#1c1c1e",borderRadius:12,overflow:"hidden",opacity:m.done?.5:1}}>
+      <div onClick={onPress} style={{padding:"14px 12px 10px",cursor:"pointer",position:"relative"}}>
+        <button onClick={e=>{e.stopPropagation();onRemove(m.id);}} style={{position:"absolute",top:8,right:8,background:"none",border:"none",color:"#3c3c3e",cursor:"pointer",fontSize:14,padding:0,lineHeight:1}}>×</button>
+        <div style={{fontSize:28,marginBottom:8,filter:`drop-shadow(0 0 6px ${c}44)`}}>{META_ICONS[m.cat]||"🎯"}</div>
+        <div style={{fontSize:12,fontWeight:600,color:m.done?"#4b4b4b":"#f5f5f5",lineHeight:1.3,marginBottom:8,textDecoration:m.done?"line-through":"none",paddingRight:16}}>{m.title}</div>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:5}}>
-          <span style={{fontSize:10,color:"rgba(255,255,255,.3)"}}>{m.current_val}/{m.target}</span>
-          <span style={{fontSize:12,fontWeight:700,fontFamily:"'Orbitron',monospace",color:pct>=100?"#00ffaa":c}}>{pct}%</span>
+          <span style={{fontSize:10,color:"#6b6b6b"}}>{m.current_val}/{m.target}</span>
+          <span style={{fontSize:12,fontWeight:700,color:pct>=100?"#4ade80":c}}>{pct}%</span>
         </div>
-        {/* Progress bar thin - like reference */}
-        <div style={{height:3,background:"rgba(255,255,255,.06)",borderRadius:99,overflow:"hidden",marginBottom:8}}>
-          <div style={{height:3,borderRadius:99,width:`${Math.min(pct,100)}%`,background:pct>=100?"#00ffaa":c,transition:"width .7s ease"}}/>
-        </div>
-
-        {/* Footer */}
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-          <span style={{fontSize:8,fontFamily:"'Orbitron',monospace",padding:"2px 5px",borderRadius:10,background:`${c}18`,color:c,letterSpacing:".06em"}}>{m.cat.substring(0,8)}</span>
-          {!m.done&&(
-            editing?(
-              <div style={{display:"flex",gap:3,alignItems:"center"}} onClick={e=>e.stopPropagation()}>
-                <DataInput type="number" value={val} onChange={e=>setVal(e.target.value)} style={{width:52,padding:"3px 6px",fontSize:12}}/>
-                <GlowBtn small color={c} onClick={()=>{onProgress(m.id,val);setEditing(false);}}>OK</GlowBtn>
-              </div>
-            ):(
-              <button onClick={e=>{e.stopPropagation();setVal(m.current_val);setEditing(true);}} style={{fontSize:10,background:"none",border:"none",color:"rgba(255,255,255,.2)",cursor:"pointer",padding:0}}>+</button>
-            )
-          )}
-        </div>
-        {subCount>0&&<div style={{fontSize:8,color:"rgba(255,255,255,.2)",marginTop:4}}>{subDone}/{subCount} sub-alvos</div>}
+        <Bar pct={pct} color={pct>=100?"#4ade80":c} h={3}/>
+        {subCount>0&&<div style={{fontSize:9,color:"#6b6b6b",marginTop:5}}>{subDone}/{subCount} submetas</div>}
       </div>
-    </div>
-  );
-}) {
-  const c=META_COLORS[m.cat]||"#aa88ff";
-  const pct=Math.round((Number(m.current_val)/Math.max(Number(m.target),1))*100);
-  const [editing,setEditing]=useState(false);
-  const [val,setVal]=useState(m.current_val);
-
-  return(
-    <div style={{
-      background:"#111115",
-      borderLeft:`2px solid ${m.done?"rgba(0,212,255,.08)":c}`,
-      border:"1px solid rgba(255,255,255,.05)",
-      borderRadius:"0 3px 3px 0",padding:"12px",marginBottom:6,
-      opacity:m.done?.4:1,animation:`fadeUp .2s ease ${idx*.03}s both`
-    }}>
-      <div onClick={onPress} style={{cursor:"pointer"}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8,marginBottom:8}}>
-          <div style={{flex:1,minWidth:0}}>
-            <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:2}}>
-              <span style={{fontSize:14}}>{META_ICONS[m.cat]||"X"}</span>
-              <span style={{fontSize:13,fontWeight:600,color:m.done?"rgba(0,212,255,.2)":"#e0f0ff",textDecoration:m.done?"line-through":"none"}}>{m.title}</span>
-            </div>
-            {m.descricao&&<div style={{fontSize:10,color:"rgba(180,180,200,.4)",marginLeft:20}}>{m.descricao}</div>}
-          </div>
-          <div style={{display:"flex",gap:4,alignItems:"center",flexShrink:0}}>
-            <span style={{fontSize:8,fontFamily:"'Orbitron',monospace",padding:"2px 6px",borderRadius:2,background:`${c}18`,color:c,letterSpacing:".08em"}}>{m.cat}</span>
-            <button onClick={e=>{e.stopPropagation();onRemove(m.id);}} style={{background:"none",border:"none",color:"rgba(255,255,255,.12)",cursor:"pointer",fontSize:16,lineHeight:1}}>×</button>
-          </div>
-        </div>
-
-        <div style={{marginBottom:6}}>
-          <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
-            <span style={{fontSize:9,color:"rgba(180,180,200,.4)"}}>{m.current_val} / {m.target}</span>
-            <span style={{fontSize:13,fontWeight:700,fontFamily:"'Orbitron',monospace",color:pct>=100?"#00ffaa":pct>=60?c:"#ffcc44"}}>{pct}%</span>
-          </div>
-          <ProgBar pct={pct} color={pct>=100?"#00ffaa":c} height={5}/>
-        </div>
-
-        {subCount>0&&(
-          <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}>
-            <span style={{fontSize:9,color:"rgba(180,180,200,.4)"}}>SUB-ALVOS: {subDone}/{subCount}</span>
-            <div style={{flex:1,height:3,background:"rgba(0,212,255,.06)",borderRadius:99}}>
-              <div style={{height:3,borderRadius:99,width:`${Math.round(subDone/Math.max(subCount,1)*100)}%`,background:`${c}88`,transition:"width .5s"}}/>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-        <div style={{display:"flex",gap:5}}>
-          <span style={{fontSize:8,fontFamily:"'Orbitron',monospace",padding:"2px 6px",borderRadius:2,background:"rgba(0,212,255,.06)",color:"rgba(180,180,200,.4)",letterSpacing:".08em"}}>{m.tipo}</span>
-          {m.prazo&&<span style={{fontSize:8,fontFamily:"'Orbitron',monospace",padding:"2px 6px",borderRadius:2,background:"rgba(0,212,255,.06)",color:"rgba(180,180,200,.4)",letterSpacing:".06em"}}>ATE {fmtShort(m.prazo)}</span>}
-        </div>
+      <div style={{padding:"0 12px 10px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <Tag color={c}>{m.cat}</Tag>
         {!m.done&&(
           editing?(
-            <div style={{display:"flex",gap:5,alignItems:"center"}}>
-              <DataInput type="number" value={val} onChange={e=>setVal(e.target.value)} style={{width:70}}/>
-              <GlowBtn small color={c} onClick={()=>{onProgress(m.id,val);setEditing(false);}}>OK</GlowBtn>
+            <div style={{display:"flex",gap:4,alignItems:"center"}} onClick={e=>e.stopPropagation()}>
+              <Inp type="number" value={val} onChange={e=>setVal(e.target.value)} style={{width:56,padding:"4px 8px",fontSize:13}}/>
+              <Btn small color={c} onClick={()=>{onProgress(m.id,val);setEditing(false);}}>✓</Btn>
             </div>
           ):(
-            <button onClick={()=>{setVal(m.current_val);setEditing(true);}} style={{fontSize:9,fontFamily:"'Orbitron',monospace",background:"rgba(0,212,255,.06)",border:"1px solid rgba(0,212,255,.1)",color:"rgba(0,212,255,.4)",borderRadius:2,padding:"3px 8px",cursor:"pointer",letterSpacing:".08em"}}>ATUALIZAR</button>
+            <button onClick={e=>{e.stopPropagation();setVal(m.current_val);setEditing(true);}} style={{fontSize:11,background:"none",border:"none",color:"#6b6b6b",cursor:"pointer",padding:0}}>+ atualizar</button>
           )
         )}
       </div>
@@ -962,253 +689,271 @@ function AlvoCard({m,onPress,onProgress,onRemove,idx,subCount,subDone}) {
 }
 
 // ── META DETAIL ─────────────────────────────────────────────────
-function MetaDetail({meta,onBack,onProgress,onRemove,submetas,addSubmeta,updateSubmeta,toggleSubmeta,removeSubmeta}) {
-  const c=META_COLORS[meta.cat]||"#aa88ff";
+function MetaDetail({meta,onBack,onProgress,onRemove,submetas,addSubmeta,updateSubmeta,toggleSubmeta,removeSubmeta}){
+  const c=META_COLORS[meta.cat]||"#a78bfa";
   const pct=Math.round((Number(meta.current_val)/Math.max(Number(meta.target),1))*100);
   const [val,setVal]=useState(meta.current_val);
   const [editing,setEditing]=useState(false);
-  const [showSubForm,setShowSubForm]=useState(false);
-  const [subForm,setSubForm]=useState({title:"",descricao:"",target:1,unidade:"un"});
-  const addSub=async()=>{ if(!subForm.title.trim())return; await addSubmeta(meta.id,subForm); setSubForm({title:"",descricao:"",target:1,unidade:"un"}); setShowSubForm(false); };
+  const [openSub,setOpenSub]=useState(false);
+  const [sub,setSub]=useState({title:"",descricao:"",target:1,unidade:"un"});
+
+  const addSub=async()=>{
+    if(!sub.title.trim())return;
+    await addSubmeta(meta.id,sub);
+    setSub({title:"",descricao:"",target:1,unidade:"un"});
+    setOpenSub(false);
+  };
+
   const subDone=submetas.filter(s=>s.done);
   const subPend=submetas.filter(s=>!s.done);
-  const subPct=submetas.length?Math.round(subDone.length/submetas.length*100):0;
 
   return(
-    <div style={{padding:"14px 16px 0",animation:"fadeUp .3s ease"}}>
-      <button onClick={onBack} style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"none",color:"rgba(0,212,255,.4)",cursor:"pointer",fontSize:10,marginBottom:14,padding:0,fontFamily:"'Orbitron',monospace",letterSpacing:".1em"}}>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{width:14,height:14}}><polyline points="15 18 9 12 15 6"/></svg>
-        VOLTAR
+    <div style={{animation:"fin .25s ease"}}>
+      <button onClick={onBack} style={{display:"flex",alignItems:"center",gap:5,background:"none",border:"none",color:"#a78bfa",cursor:"pointer",fontSize:13,padding:"12px 16px 0",fontWeight:500}}>
+        ← Voltar
       </button>
 
-      <HudBox accent={c} style={{marginBottom:12}}>
-        <div style={{fontSize:24,marginBottom:6}}>{META_ICONS[meta.cat]||"X"}</div>
-        <div style={{fontSize:16,fontWeight:700,color:"#f0f0f2",marginBottom:3}}>{meta.title}</div>
-        {meta.descricao&&<div style={{fontSize:11,color:"rgba(180,180,200,.45)",marginBottom:8}}>{meta.descricao}</div>}
-        <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
-          <span style={{fontSize:8,fontFamily:"'Orbitron',monospace",padding:"2px 7px",borderRadius:2,background:`${c}22`,color:c,letterSpacing:".1em"}}>{meta.cat}</span>
-          <span style={{fontSize:8,fontFamily:"'Orbitron',monospace",padding:"2px 7px",borderRadius:2,background:"rgba(0,212,255,.08)",color:"rgba(0,212,255,.4)",letterSpacing:".08em"}}>{meta.tipo}</span>
-          {meta.prazo&&<span style={{fontSize:8,fontFamily:"'Orbitron',monospace",padding:"2px 7px",borderRadius:2,background:"rgba(0,212,255,.08)",color:"rgba(0,212,255,.4)",letterSpacing:".08em"}}>ATE {fmtShort(meta.prazo)}</span>}
+      {/* Header */}
+      <div style={{padding:"12px 16px 0"}}>
+        <div style={{fontSize:32,marginBottom:6}}>{META_ICONS[meta.cat]||"🎯"}</div>
+        <div style={{fontSize:20,fontWeight:700,color:"#f5f5f5",marginBottom:4}}>{meta.title}</div>
+        {meta.descricao&&<div style={{fontSize:13,color:"#6b6b6b",marginBottom:8}}>{meta.descricao}</div>}
+        <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+          <Tag color={c}>{meta.cat}</Tag>
+          <Tag color="#6b6b6b">{meta.tipo}</Tag>
+          {meta.prazo&&<Tag color="#6b6b6b">até {fmtShort(meta.prazo)}</Tag>}
         </div>
-      </HudBox>
+      </div>
 
-      <HudBox accent={c} style={{marginBottom:12}}>
-        <SectionLabel>PROGRESSO GERAL</SectionLabel>
+      {/* Progress */}
+      <div style={{margin:"14px 16px",background:"#1c1c1e",borderRadius:12,padding:16}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
           <div>
-            <div style={{fontSize:32,fontWeight:700,fontFamily:"'Orbitron',monospace",color:pct>=100?"#00ffaa":c,lineHeight:1}}>{pct}%</div>
-            <div style={{fontSize:10,color:"rgba(180,180,200,.4)",marginTop:3}}>{meta.current_val} DE {meta.target}</div>
+            <div style={{fontSize:32,fontWeight:800,color:pct>=100?"#4ade80":c,lineHeight:1}}>{pct}%</div>
+            <div style={{fontSize:11,color:"#6b6b6b",marginTop:2}}>{meta.current_val} de {meta.target}</div>
           </div>
-          {!meta.done&&(editing?(
-            <div style={{display:"flex",gap:6,alignItems:"center"}}>
-              <DataInput type="number" value={val} onChange={e=>setVal(e.target.value)} style={{width:80}}/>
-              <GlowBtn color={c} onClick={()=>{onProgress(meta.id,val);setEditing(false);}}>OK</GlowBtn>
-            </div>
-          ):(
-            <GlowBtn color={c} onClick={()=>{setVal(meta.current_val);setEditing(true);}}>ATUALIZAR</GlowBtn>
-          ))}
+          {!meta.done&&(
+            editing?(
+              <div style={{display:"flex",gap:6,alignItems:"center"}}>
+                <Inp type="number" value={val} onChange={e=>setVal(e.target.value)} style={{width:80}}/>
+                <Btn color={c} onClick={()=>{onProgress(meta.id,val);setEditing(false);}}>✓</Btn>
+              </div>
+            ):(
+              <Btn color={c} onClick={()=>{setVal(meta.current_val);setEditing(true);}}>Atualizar</Btn>
+            )
+          )}
         </div>
-        <ProgBar pct={pct} color={pct>=100?"#00ffaa":c} height={8}/>
-        {submetas.length>0&&<div style={{fontSize:9,color:"rgba(180,180,200,.4)",marginTop:6,fontFamily:"'Orbitron',monospace",letterSpacing:".06em"}}>SUB-ALVOS: {subDone.length}/{submetas.length} · {subPct}%</div>}
-      </HudBox>
+        <Bar pct={pct} color={pct>=100?"#4ade80":c} h={8}/>
+        {submetas.length>0&&<div style={{fontSize:11,color:"#6b6b6b",marginTop:8}}>{subDone.length}/{submetas.length} submetas concluídas</div>}
+      </div>
 
+      {/* Objetivo */}
       {meta.objetivo&&(
-        <HudBox style={{marginBottom:12}}>
-          <SectionLabel>OBJETIVO</SectionLabel>
-          <div style={{fontSize:12,color:"rgba(224,240,255,.6)",lineHeight:1.6}}>{meta.objetivo}</div>
-        </HudBox>
+        <div style={{margin:"0 16px 12px",background:"#1c1c1e",borderRadius:12,padding:14}}>
+          <div style={{fontSize:11,fontWeight:600,color:"#6b6b6b",marginBottom:6}}>POR QUE ISSO IMPORTA</div>
+          <div style={{fontSize:13,color:"#d4d4d4",lineHeight:1.6}}>{meta.objetivo}</div>
+        </div>
       )}
 
-      <HudBox accent={c} style={{marginBottom:12}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
-          <SectionLabel>SUB-ALVOS ({submetas.length})</SectionLabel>
-          <GlowBtn small color={c} outline={showSubForm} onClick={()=>setShowSubForm(o=>!o)}>
-            {showSubForm?"CANCELAR":"+ NOVO"}
-          </GlowBtn>
+      {/* Submetas */}
+      <div style={{margin:"0 16px 12px",background:"#1c1c1e",borderRadius:12,overflow:"hidden"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"12px 14px",borderBottom:submetas.length>0||openSub?"1px solid #2c2c2e":"none"}}>
+          <div style={{fontSize:13,fontWeight:600,color:"#f5f5f5"}}>Submetas {submetas.length>0&&`(${submetas.length})`}</div>
+          <button onClick={()=>setOpenSub(o=>!o)} style={{fontSize:12,color:"#a78bfa",background:"none",border:"none",cursor:"pointer",fontWeight:500}}>
+            {openSub?"Cancelar":"+ Nova"}
+          </button>
         </div>
 
-        {showSubForm&&(
-          <div style={{marginBottom:12,animation:"hudIn .2s ease"}}>
-            <HLine/>
-            <DataInput value={subForm.title} onChange={e=>setSubForm(f=>({...f,title:e.target.value}))} placeholder="Ex: Janeiro - Livro X / Guardar R$500..." autoFocus/>
-            <DataInput value={subForm.descricao} onChange={e=>setSubForm(f=>({...f,descricao:e.target.value}))} placeholder="Detalhes..." style={{marginTop:6}}/>
+        {openSub&&(
+          <div style={{padding:"12px 14px",borderBottom:"1px solid #2c2c2e"}}>
+            <Inp value={sub.title} onChange={e=>setSub(f=>({...f,title:e.target.value}))} placeholder="Ex: Janeiro — Livro X..." autoFocus/>
+            <Inp value={sub.descricao} onChange={e=>setSub(f=>({...f,descricao:e.target.value}))} placeholder="Detalhes..." style={{marginTop:6}}/>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginTop:6}}>
-              <div><div style={fldL}>META</div><DataInput type="number" value={subForm.target} onChange={e=>setSubForm(f=>({...f,target:Number(e.target.value)}))}/></div>
-              <div><div style={fldL}>UNIDADE</div><DataInput value={subForm.unidade} onChange={e=>setSubForm(f=>({...f,unidade:e.target.value}))} placeholder="livros, R$, km..."/></div>
+              <Inp type="number" value={sub.target} onChange={e=>setSub(f=>({...f,target:Number(e.target.value)}))} placeholder="Meta"/>
+              <Inp value={sub.unidade} onChange={e=>setSub(f=>({...f,unidade:e.target.value}))} placeholder="livros, R$, km..."/>
             </div>
-            <GlowBtn color={c} onClick={addSub} style={{marginTop:8,width:"100%"}}>CRIAR SUB-ALVO</GlowBtn>
-            <HLine/>
+            <Btn onClick={addSub} color="#a78bfa" style={{marginTop:10,width:"100%"}}>Criar submeta</Btn>
           </div>
         )}
 
-        {submetas.length===0&&!showSubForm&&<div style={{textAlign:"center",padding:"14px 0",fontSize:10,color:"rgba(180,180,200,.25)",fontFamily:"'Orbitron',monospace",letterSpacing:".12em"}}>NENHUM SUB-ALVO</div>}
-        {subPend.map((s,i)=><SubAlvo key={s.id} s={s} c={c} onToggle={toggleSubmeta} onUpdate={updateSubmeta} onRemove={removeSubmeta} idx={i}/>)}
+        {submetas.length===0&&!openSub&&(
+          <div style={{padding:"14px",fontSize:12,color:"#4b4b4b",textAlign:"center"}}>Nenhuma submeta — quebre em partes menores</div>
+        )}
+
+        {subPend.map((s,i)=><SubRow key={s.id} s={s} c={c} onToggle={toggleSubmeta} onUpdate={updateSubmeta} onRemove={removeSubmeta} last={i===subPend.length-1&&subDone.length===0}/>)}
+
         {subDone.length>0&&(
-          <div style={{marginTop:10}}>
-            <div style={{fontSize:8,fontFamily:"'Orbitron',monospace",color:"rgba(180,180,200,.25)",letterSpacing:".1em",marginBottom:6}}>CONCLUIDOS ({subDone.length})</div>
-            {subDone.map((s,i)=><SubAlvo key={s.id} s={s} c={c} onToggle={toggleSubmeta} onUpdate={updateSubmeta} onRemove={removeSubmeta} idx={i}/>)}
+          <>
+            <div style={{padding:"8px 14px",fontSize:10,fontWeight:600,color:"#6b6b6b",background:"transparent"}}>CONCLUÍDAS ({subDone.length})</div>
+            {subDone.map((s,i)=><SubRow key={s.id} s={s} c={c} onToggle={toggleSubmeta} onUpdate={updateSubmeta} onRemove={removeSubmeta} last={i===subDone.length-1}/>)}
+          </>
+        )}
+      </div>
+
+      {/* Info */}
+      <div style={{margin:"0 16px",background:"#1c1c1e",borderRadius:12,padding:14,marginBottom:12}}>
+        <div style={{fontSize:11,fontWeight:600,color:"#6b6b6b",marginBottom:8}}>DETALHES</div>
+        <div style={{display:"flex",justifyContent:"space-between",padding:"4px 0",borderBottom:"1px solid #2c2c2e"}}>
+          <span style={{fontSize:12,color:"#6b6b6b"}}>Criada</span>
+          <span style={{fontSize:12,color:"#d4d4d4"}}>{fmtDT(meta.created_at)}</span>
+        </div>
+        {meta.done_at&&(
+          <div style={{display:"flex",justifyContent:"space-between",padding:"4px 0"}}>
+            <span style={{fontSize:12,color:"#6b6b6b"}}>Concluída</span>
+            <span style={{fontSize:12,color:"#4ade80"}}>{fmtDT(meta.done_at)}</span>
           </div>
         )}
-      </HudBox>
+      </div>
 
-      <HudBox style={{marginBottom:12}}>
-        <SectionLabel>DADOS</SectionLabel>
-        <div style={{display:"flex",justifyContent:"space-between",padding:"4px 0",borderBottom:"1px solid rgba(0,212,255,.05)"}}>
-          <span style={{fontSize:10,color:"rgba(180,180,200,.4)"}}>CRIADO</span>
-          <span style={{fontSize:10,color:"rgba(224,240,255,.5)"}}>{fmtDT(meta.created_at)}</span>
-        </div>
-        {meta.done_at&&<div style={{display:"flex",justifyContent:"space-between",padding:"4px 0"}}>
-          <span style={{fontSize:10,color:"rgba(180,180,200,.4)"}}>CONCLUIDO</span>
-          <span style={{fontSize:10,color:"#00ffaa"}}>{fmtDT(meta.done_at)}</span>
-        </div>}
-      </HudBox>
-
-      <button onClick={()=>{onRemove(meta.id);onBack();}} style={{width:"100%",padding:10,borderRadius:3,background:"rgba(255,68,102,.06)",border:"1px solid rgba(255,68,102,.2)",color:"rgba(255,68,102,.6)",fontSize:10,cursor:"pointer",fontFamily:"'Orbitron',monospace",letterSpacing:".1em",marginBottom:20}}>
-        REMOVER ALVO
+      <button onClick={()=>{onRemove(meta.id);onBack();}} style={{width:"calc(100% - 32px)",margin:"0 16px 20px",padding:12,borderRadius:10,background:"transparent",border:"1px solid #3c1c1c",color:"#f87171",fontSize:13,cursor:"pointer"}}>
+        Remover meta
       </button>
     </div>
   );
 }
 
-function SubAlvo({s,c,onToggle,onUpdate,onRemove,idx}) {
+function SubRow({s,c,onToggle,onUpdate,onRemove,last}){
   const pct=Math.round((Number(s.current_val)/Math.max(Number(s.target),1))*100);
   const [editing,setEditing]=useState(false);
   const [val,setVal]=useState(s.current_val);
+
   return(
-    <div style={{borderLeft:`1px solid ${s.done?"rgba(0,212,255,.06)":c}55`,paddingLeft:10,marginBottom:8,opacity:s.done?.4:1,animation:`fadeUp .18s ease ${idx*.025}s both`}}>
-      <div style={{display:"flex",gap:8,alignItems:"flex-start"}}>
-        <div onClick={()=>onToggle(s.id)} style={{width:14,height:14,borderRadius:2,flexShrink:0,marginTop:2,background:s.done?`${c}33`:"transparent",border:`1px solid ${s.done?c:"rgba(0,212,255,.2)"}`,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",transition:"all .2s"}}>
-          {s.done&&<svg viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="3" style={{width:8,height:8}}><polyline points="20 6 9 17 4 12"/></svg>}
+    <div style={{borderBottom:last?"none":"1px solid #2c2c2e",padding:"10px 14px",opacity:s.done?.45:1}}>
+      <div style={{display:"flex",alignItems:"flex-start",gap:10}}>
+        <div onClick={()=>onToggle(s.id)} style={{width:18,height:18,borderRadius:5,flexShrink:0,marginTop:1,background:s.done?c:"transparent",border:`1.5px solid ${s.done?c:"#3c3c3e"}`,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",transition:"all .2s"}}>
+          {s.done&&<svg viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="3" style={{width:10,height:10}}><polyline points="20 6 9 17 4 12"/></svg>}
         </div>
         <div style={{flex:1,minWidth:0}}>
-          <div style={{fontSize:12,color:s.done?"rgba(0,212,255,.2)":"#e0f0ff",textDecoration:s.done?"line-through":"none"}}>{s.title}</div>
-          {s.descricao&&<div style={{fontSize:9,color:"rgba(180,180,200,.3)",marginTop:1}}>{s.descricao}</div>}
+          <div style={{fontSize:13,color:s.done?"#4b4b4b":"#f5f5f5",textDecoration:s.done?"line-through":"none"}}>{s.title}</div>
+          {s.descricao&&<div style={{fontSize:11,color:"#6b6b6b",marginTop:1}}>{s.descricao}</div>}
           {Number(s.target)>1&&(
-            <div style={{marginTop:5}}>
+            <div style={{marginTop:6}}>
               <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
-                <span style={{fontSize:9,color:"rgba(180,180,200,.3)"}}>{s.current_val} / {s.target} {s.unidade}</span>
-                <span style={{fontSize:10,fontFamily:"'Orbitron',monospace",fontWeight:700,color:pct>=100?"#00ffaa":c}}>{pct}%</span>
+                <span style={{fontSize:10,color:"#6b6b6b"}}>{s.current_val}/{s.target} {s.unidade}</span>
+                <span style={{fontSize:11,fontWeight:600,color:pct>=100?"#4ade80":c}}>{pct}%</span>
               </div>
-              <ProgBar pct={pct} color={pct>=100?"#00ffaa":c} height={3}/>
+              <Bar pct={pct} color={pct>=100?"#4ade80":c} h={3}/>
+            </div>
+          )}
+          {!s.done&&Number(s.target)>1&&(
+            <div style={{marginTop:7,display:"flex",gap:5,alignItems:"center"}}>
+              {editing?(
+                <><Inp type="number" value={val} onChange={e=>setVal(e.target.value)} style={{width:70,padding:"4px 8px",fontSize:13}}/>
+                <Btn small color={c} onClick={()=>{onUpdate(s.id,val);setEditing(false);}}>✓</Btn>
+                <Btn small ghost color="#6b6b6b" onClick={()=>setEditing(false)}>×</Btn></>
+              ):(
+                <button onClick={()=>{setVal(s.current_val);setEditing(true);}} style={{fontSize:11,background:"none",border:"none",color:"#6b6b6b",cursor:"pointer",padding:0}}>+ atualizar</button>
+              )}
             </div>
           )}
         </div>
-        <button onClick={()=>onRemove(s.id)} style={{background:"none",border:"none",color:"rgba(0,212,255,.1)",cursor:"pointer",fontSize:14,lineHeight:1,padding:0,flexShrink:0}}>×</button>
+        <button onClick={()=>onRemove(s.id)} style={{background:"none",border:"none",color:"#3c3c3e",cursor:"pointer",fontSize:16,lineHeight:1,padding:0,flexShrink:0}}>×</button>
       </div>
-      {!s.done&&Number(s.target)>1&&(
-        <div style={{marginTop:6,display:"flex",gap:5,alignItems:"center",paddingLeft:22}}>
-          {editing?(<><DataInput type="number" value={val} onChange={e=>setVal(e.target.value)} style={{width:70}}/><GlowBtn small color={c} onClick={()=>{onUpdate(s.id,val);setEditing(false);}}>OK</GlowBtn><GlowBtn outline small color="rgba(0,212,255,.3)" onClick={()=>setEditing(false)}>X</GlowBtn></>
-          ):(
-            <button onClick={()=>{setVal(s.current_val);setEditing(true);}} style={{fontSize:8,fontFamily:"'Orbitron',monospace",background:"rgba(0,212,255,.06)",border:"1px solid rgba(0,212,255,.1)",color:"rgba(180,180,200,.45)",borderRadius:2,padding:"2px 7px",cursor:"pointer",letterSpacing:".08em"}}>UPDATE</button>
-          )}
-        </div>
-      )}
     </div>
   );
 }
 
 // ════════════════════════════════════════════════════════════════
-// JARVIS TAB
+// JARVIS
 // ════════════════════════════════════════════════════════════════
-function JarvisTab({chat,setChat,addTarefa,addMeta,showToast,tarefas,checked,progress,nextItem,metas,notas,addNota,convertNota,removeNota}) {
-  const [input,setInput]   = useState("");
-  const [loading,setLoading] = useState(false);
-  const [mode,setMode]     = useState("chat");
-  const [text,setText]     = useState("");
-  const [recording,setRecording] = useState(false);
-  const endRef  = useRef(null);
-  const mediaRef= useRef(null);
-  const chunks  = useRef([]);
-  const pending = tarefas.filter(t=>!t.done).length;
-  const doneB   = Object.values(checked).filter(Boolean).length;
+function JarvisTab({chat,setChat,addTarefa,addMeta,toast2,tarefas,checked,progress,nextItem,metas,notas,addNota,convertNota,removeNota}){
+  const [input,setInput]=useState("");
+  const [loading,setLoading]=useState(false);
+  const [mode,setMode]=useState("chat");
+  const [text,setText]=useState("");
+  const [rec,setRec]=useState(false);
+  const endRef=useRef(null);
+  const mediaRef=useRef(null);
+  const chunks=useRef([]);
+  const pend=tarefas.filter(t=>!t.done).length;
+  const doneB=Object.values(checked).filter(Boolean).length;
 
-  useEffect(()=>{ endRef.current?.scrollIntoView({behavior:"smooth"}); },[chat]);
+  useEffect(()=>{endRef.current?.scrollIntoView({behavior:"smooth"});},[chat]);
 
-  const send = async(text) => {
-    if(!text.trim()||loading) return;
+  const send=async(text)=>{
+    if(!text.trim()||loading)return;
     const uMsg={role:"user",content:text};
     const next=[...chat,uMsg];
-    setChat(next); setInput(""); setLoading(true);
-
-    // Save user msg to Supabase
+    setChat(next);setInput("");setLoading(true);
     await sb("chat_history","POST",{role:"user",content:text,created_at:new Date().toISOString()});
 
-    const ctx=`[CONTEXTO ${new Date().toLocaleDateString("pt-BR")} ${new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}: Rotina ${progress}% (${doneB}/${ROUTINE.length} blocos). Proximo bloco: ${nextItem?nextItem.time+" "+nextItem.label:"rotina concluida"}. Tarefas pendentes: ${pending}. Metas ativas: ${metas.filter(m=>!m.done).length}.
+    const ctx=`[CONTEXTO ${new Date().toLocaleDateString("pt-BR")} ${new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}: Rotina ${progress}% (${doneB}/${ROUTINE.length}). Próximo: ${nextItem?nextItem.time+" "+nextItem.label:"concluído"}. Tarefas pendentes: ${pend}. Metas ativas: ${metas.filter(m=>!m.done).length}.
 
-INSTRUCAO IMPORTANTE: Se o usuario pedir para criar tarefa, meta, lembrete ou agendar algo, voce DEVE incluir no final da sua resposta exatamente este formato (sem alterar):
-%%CADASTRAR%%{"tipo":"tarefa","title":"titulo aqui","note":"detalhe","tag":"UPMIND"}%%FIM%%
+Se o usuário pedir para criar tarefa, meta ou lembrete, inclua ao final EXATAMENTE:
+%%CADASTRAR%%{"tipo":"tarefa","title":"...","note":"...","tag":"UPMIND"}%%FIM%%
 ou para meta:
-%%CADASTRAR%%{"tipo":"meta","title":"titulo aqui","cat":"UPMIND","target":100,"objetivo":"por que importa"}%%FIM%%
+%%CADASTRAR%%{"tipo":"meta","title":"...","cat":"UPMIND","target":100,"objetivo":"..."}%%FIM%%
 
-Mensagem do usuario: ${text}]`;
+Mensagem: ${text}]`;
 
-    try {
+    try{
       const reply=await askAI([...chat,{role:"user",content:ctx}]);
-
-      // Extract CADASTRAR block with robust parsing
       let clean=reply;
-      let cadastrado=false;
       const match=reply.match(/%%CADASTRAR%%([\s\S]*?)%%FIM%%/);
-      if(match) {
+      if(match){
         clean=reply.replace(/%%CADASTRAR%%[\s\S]*?%%FIM%%/g,"").trim();
-        try {
-          const raw=match[1].trim().replace(/[
-]+/g," ");
-          const d=JSON.parse(raw);
-          if(d.tipo==="meta") {
-            await addMeta({title:d.title||"Meta",cat:d.cat||"UPMIND",tipo:"Mensal",target:Number(d.target)||100,descricao:d.note||"",objetivo:d.objetivo||""});
-            showToast("Alvo registrado por J.A.R.V.I.S");
-          } else {
-            await addTarefa({title:d.title||"Tarefa",tag:d.tag||"UPMIND",note:d.note||"",reminder_time:d.reminder_time||""});
-            showToast("Operacao criada por J.A.R.V.I.S");
-          }
-          cadastrado=true;
-        } catch(e) { console.log("parse err",e); }
+        try{
+          const d=JSON.parse(match[1].trim().replace(/[\r\n]+/g," "));
+          if(d.tipo==="meta"){await addMeta({title:d.title||"Meta",cat:d.cat||"UPMIND",tipo:"Mensal",target:Number(d.target)||100,descricao:"",objetivo:d.objetivo||""});toast2("Meta criada por J.A.R.V.I.S");}
+          else{await addTarefa({title:d.title||"Tarefa",tag:d.tag||"UPMIND",note:d.note||"",reminder_time:""});toast2("Tarefa criada por J.A.R.V.I.S");}
+        }catch{}
       }
-
-      const assistMsg={role:"assistant",content:clean};
-      setChat([...next,assistMsg]);
-
-      // Save assistant reply to Supabase
+      setChat([...next,{role:"assistant",content:clean}]);
       await sb("chat_history","POST",{role:"assistant",content:clean,created_at:new Date().toISOString()});
-
-    } catch(e) {
-      const errMsg={role:"assistant",content:"SISTEMA OFFLINE. Tente novamente."};
-      setChat([...next,errMsg]);
-      await sb("chat_history","POST",{role:"assistant",content:errMsg.content,created_at:new Date().toISOString()});
+    }catch{
+      const err={role:"assistant",content:"Conexão perdida. Tente novamente."};
+      setChat([...next,err]);
     }
     setLoading(false);
   };
-  const startRec=async()=>{ try { const stream=await navigator.mediaDevices.getUserMedia({audio:true}); const mr=new MediaRecorder(stream); chunks.current=[]; mr.ondataavailable=e=>chunks.current.push(e.data); mr.onstop=()=>{ stream.getTracks().forEach(t=>t.stop()); setRecording(false); showToast("Audio registrado"); }; mr.start(); mediaRef.current=mr; setRecording(true); } catch { showToast("Microfone bloqueado","err"); } };
-  const stopRec=()=>{ if(mediaRef.current&&recording) mediaRef.current.stop(); };
-  const quick=["Como esta meu dia?","O que ainda preciso fazer?","Analise minhas metas","Qual meu foco agora?"];
+
+  const startRec=async()=>{
+    try{
+      const s=await navigator.mediaDevices.getUserMedia({audio:true});
+      const mr=new MediaRecorder(s);
+      chunks.current=[];
+      mr.ondataavailable=e=>chunks.current.push(e.data);
+      mr.onstop=()=>{s.getTracks().forEach(t=>t.stop());setRec(false);toast2("Áudio registrado");};
+      mr.start();mediaRef.current=mr;setRec(true);
+    }catch{toast2("Microfone bloqueado",true);}
+  };
+  const stopRec=()=>{if(mediaRef.current&&rec)mediaRef.current.stop();};
+
+  const quick=["Como está meu dia?","O que ainda preciso fazer?","Analise minhas metas","Qual meu foco agora?"];
+
   return(
-    <div style={{display:"flex",flexDirection:"column",height:"calc(100dvh - 140px)",animation:"fadeUp .35s ease"}}>
-      <div style={{display:"flex",background:"rgba(0,8,20,.9)",borderBottom:"1px solid rgba(0,212,255,.08)",flexShrink:0}}>
-        {[{id:"chat",l:"CHAT"},{id:"notas",l:"NOTAS"}].map(m=>(
-          <button key={m.id} onClick={()=>setMode(m.id)} style={{flex:1,padding:"9px",background:"none",border:"none",cursor:"pointer",fontSize:9,fontFamily:"'Orbitron',monospace",fontWeight:mode===m.id?700:400,color:mode===m.id?"#00d4ff":"rgba(0,180,220,.2)",borderBottom:mode===m.id?"1px solid #00d4ff":"1px solid transparent",letterSpacing:".12em",transition:"all .2s"}}>{m.l}</button>
+    <div style={{display:"flex",flexDirection:"column",height:"calc(100dvh - 130px)"}}>
+      {/* Mode tabs */}
+      <div style={{display:"flex",borderBottom:"1px solid #1c1c1e",flexShrink:0}}>
+        {[{id:"chat",l:"Chat"},{id:"notas",l:"Notas"}].map(m=>(
+          <button key={m.id} onClick={()=>setMode(m.id)} style={{flex:1,padding:"10px",background:"none",border:"none",cursor:"pointer",fontSize:13,fontWeight:mode===m.id?600:400,color:mode===m.id?"#f5f5f5":"#6b6b6b",borderBottom:mode===m.id?"2px solid #a78bfa":"2px solid transparent",transition:"all .2s"}}>
+            {m.l}
+          </button>
         ))}
       </div>
+
       {mode==="notas"?(
         <div style={{flex:1,overflowY:"scroll",WebkitOverflowScrolling:"touch",padding:"12px 16px"}}>
-          <HudBox style={{marginBottom:12}}>
-            <button onClick={recording?stopRec:startRec} style={{width:"100%",padding:"9px",borderRadius:3,marginBottom:10,cursor:"pointer",background:recording?"rgba(255,68,102,.1)":"rgba(0,212,255,.06)",border:`1px solid ${recording?"rgba(255,68,102,.4)":"rgba(0,212,255,.15)"}`,color:recording?"#ff8899":"rgba(0,212,255,.5)",fontSize:10,fontFamily:"'Orbitron',monospace",letterSpacing:".1em",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-              {recording?<><div style={{width:6,height:6,borderRadius:1,background:"#ff4466",animation:"pulse 1s infinite"}}/> PARAR</>:<>MIC GRAVAR</>}
+          <div style={{background:"#1c1c1e",borderRadius:12,padding:14,marginBottom:12}}>
+            <button onClick={rec?stopRec:startRec} style={{width:"100%",padding:"9px",borderRadius:8,marginBottom:10,cursor:"pointer",background:rec?"rgba(248,113,113,.1)":"transparent",border:`1px solid ${rec?"#f87171":"#2c2c2e"}`,color:rec?"#f87171":"#6b6b6b",fontSize:12,fontWeight:500,display:"flex",alignItems:"center",justifyContent:"center",gap:7}}>
+              {rec?<><div style={{width:6,height:6,borderRadius:"50%",background:"#ef4444",animation:"pulse 1s infinite"}}/> Parar gravação</>:<>🎙 Gravar áudio</>}
             </button>
-            <textarea value={text} onChange={e=>setText(e.target.value)} placeholder="Registre ideias, insights, lembretes..." rows={3} style={{width:"100%",background:"rgba(255,255,255,.05)",border:"1px solid rgba(0,212,255,.12)",borderRadius:3,padding:"10px 11px",color:"#f0f0f2",fontSize:16,resize:"none",outline:"none",fontFamily:"'Exo 2',sans-serif",lineHeight:1.5}}/>
+            <textarea value={text} onChange={e=>setText(e.target.value)} placeholder="Escreva uma ideia, tarefa, lembrete... J.A.R.V.I.S converte automaticamente." rows={3} style={{width:"100%",background:"#0f0f10",border:"none",borderRadius:8,padding:"10px 12px",color:"#f5f5f5",fontSize:16,resize:"none",outline:"none",fontFamily:"inherit",lineHeight:1.5}}/>
             <div style={{display:"flex",justifyContent:"flex-end",marginTop:8}}>
-              <GlowBtn onClick={async()=>{if(text.trim()){await addNota(text);setText("");}}} color="#aa88ff">REGISTRAR</GlowBtn>
+              <Btn onClick={async()=>{if(text.trim()){await addNota(text);setText("");}}} color="#a78bfa">Salvar nota</Btn>
             </div>
-          </HudBox>
-          {notas.length===0&&<EmptyHud label="Nenhuma nota registrada"/>}
+          </div>
+
+          {notas.length===0&&<Empty text="Nenhuma anotação ainda"/>}
           {notas.map((n,i)=>(
-            <div key={n.id} style={{borderLeft:`2px solid ${n.converted?"rgba(0,255,170,.3)":"rgba(0,212,255,.3)"}`,padding:"10px 12px",marginBottom:8,background:"#111115",borderRadius:"0 3px 3px 0",opacity:n.converted?.5:1}}>
-              <div style={{fontSize:12,color:"rgba(224,240,255,.7)",lineHeight:1.6,marginBottom:7}}>{n.texto}</div>
+            <div key={n.id} style={{background:"#1c1c1e",borderRadius:10,padding:"11px 13px",marginBottom:6,opacity:n.converted?.5:1,borderLeft:`2px solid ${n.converted?"#4ade80":"#a78bfa"}`}}>
+              <div style={{fontSize:13,color:"#d4d4d4",lineHeight:1.6,marginBottom:7}}>{n.texto}</div>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                <span style={{fontSize:8,fontFamily:"'Orbitron',monospace",color:"rgba(180,180,200,.25)",letterSpacing:".06em"}}>{fmtDT(n.created_at)}</span>
+                <span style={{fontSize:10,color:"#4b4b4b"}}>{fmtDT(n.created_at)}</span>
                 <div style={{display:"flex",gap:6}}>
-                  {n.converted?<span style={{fontSize:8,fontFamily:"'Orbitron',monospace",color:"#00ffaa",letterSpacing:".1em"}}>CONVERTIDO</span>:<GlowBtn small color="#aa88ff" onClick={()=>convertNota(n)}>CONVERTER</GlowBtn>}
-                  <button onClick={()=>removeNota(n.id)} style={{background:"none",border:"none",color:"rgba(255,255,255,.12)",cursor:"pointer",fontSize:14,lineHeight:1}}>×</button>
+                  {n.converted?<span style={{fontSize:11,color:"#4ade80",fontWeight:500}}>✓ Convertido</span>
+                    :<Btn small ghost color="#a78bfa" onClick={()=>convertNota(n)}>→ Converter</Btn>}
+                  <button onClick={()=>removeNota(n.id)} style={{background:"none",border:"none",color:"#3c3c3e",cursor:"pointer",fontSize:16,lineHeight:1}}>×</button>
                 </div>
               </div>
             </div>
@@ -1217,32 +962,45 @@ Mensagem do usuario: ${text}]`;
       ):(
         <>
           <div style={{flex:1,overflowY:"scroll",WebkitOverflowScrolling:"touch",padding:"10px 16px"}}>
-            <div style={{display:"flex",alignItems:"center",gap:7,padding:"6px 0",borderBottom:"1px solid rgba(0,212,255,.06)",marginBottom:10}}>
-              <div style={{width:5,height:5,borderRadius:1,background:"#00ffaa",animation:"pulse 2s infinite"}}/>
-              <span style={{fontSize:8,fontFamily:"'Orbitron',monospace",color:"rgba(180,180,200,.4)",letterSpacing:".1em"}}>J.A.R.V.I.S v2.1 · CLAUDE · ONLINE</span>
-              <button onClick={()=>setChat([])} style={{marginLeft:"auto",fontSize:8,fontFamily:"'Orbitron',monospace",background:"none",border:"1px solid rgba(0,212,255,.1)",color:"rgba(180,180,200,.3)",borderRadius:2,padding:"2px 7px",cursor:"pointer",letterSpacing:".08em"}}>LIMPAR</button>
+            <div style={{display:"flex",alignItems:"center",gap:6,padding:"4px 0 10px",borderBottom:"1px solid #1c1c1e",marginBottom:8}}>
+              <div style={{width:5,height:5,borderRadius:"50%",background:"#4ade80"}}/>
+              <span style={{fontSize:11,color:"#6b6b6b"}}>J.A.R.V.I.S · Claude Sonnet · Online</span>
+              <button onClick={async()=>{setChat([]);await sb("chat_history?role=eq.user","DELETE");await sb("chat_history?role=eq.assistant","DELETE");}} style={{marginLeft:"auto",fontSize:11,color:"#6b6b6b",background:"none",border:"none",cursor:"pointer"}}>Limpar</button>
             </div>
+
             {chat.length===0&&(
-              <div style={{textAlign:"center",padding:"24px 0"}}>
-                <div style={{fontSize:9,fontFamily:"'Orbitron',monospace",color:"rgba(180,180,200,.25)",letterSpacing:".2em",marginBottom:20}}>AGUARDANDO INSTRUCOES</div>
+              <div style={{padding:"20px 0"}}>
+                <div style={{fontSize:13,color:"#6b6b6b",marginBottom:16,textAlign:"center"}}>Como posso ajudar?</div>
                 <div style={{display:"flex",flexDirection:"column",gap:6}}>
-                  {quick.map(q=><button key={q} onClick={()=>send(q)} style={{background:"rgba(16,16,20,.9)",border:"1px solid rgba(0,212,255,.1)",color:"rgba(0,212,255,.4)",borderRadius:3,padding:"9px 14px",cursor:"pointer",fontSize:12,textAlign:"left",transition:"all .2s",fontFamily:"'Exo 2',sans-serif"}}>{q} →</button>)}
+                  {quick.map(q=>(
+                    <button key={q} onClick={()=>send(q)} style={{background:"#1c1c1e",border:"none",color:"#d4d4d4",borderRadius:10,padding:"11px 14px",cursor:"pointer",fontSize:13,textAlign:"left",transition:"background .2s"}}>
+                      {q}
+                    </button>
+                  ))}
                 </div>
               </div>
             )}
+
             {chat.map((m,i)=>(
               <div key={i} style={{display:"flex",justifyContent:m.role==="user"?"flex-end":"flex-start",marginBottom:8}}>
-                {m.role==="assistant"&&<div style={{fontSize:9,fontFamily:"'Orbitron',monospace",color:"rgba(180,180,200,.4)",marginRight:6,paddingTop:10}}>J</div>}
-                <div style={{maxWidth:"80%",background:m.role==="user"?"rgba(0,40,80,.6)":"rgba(0,12,28,.8)",border:`1px solid ${m.role==="user"?"rgba(0,212,255,.25)":"rgba(0,212,255,.1)"}`,borderRadius:m.role==="user"?"3px 3px 0 3px":"3px 3px 3px 0",padding:"10px 12px",fontSize:13,color:"#f0f0f2",lineHeight:1.65,whiteSpace:"pre-wrap"}}>{m.content}</div>
+                <div style={{maxWidth:"82%",background:m.role==="user"?"#a78bfa1a":"#1c1c1e",border:m.role==="user"?"1px solid #a78bfa33":"none",borderRadius:m.role==="user"?"12px 12px 2px 12px":"12px 12px 12px 2px",padding:"10px 13px",fontSize:13,color:"#f5f5f5",lineHeight:1.65,whiteSpace:"pre-wrap"}}>
+                  {m.content}
+                </div>
               </div>
             ))}
-            {loading&&<div style={{display:"flex",gap:5,padding:"9px 12px",background:"rgba(16,16,20,.9)",border:"1px solid rgba(0,212,255,.08)",borderRadius:"3px 3px 3px 0",width:"fit-content",marginBottom:8}}>{[0,1,2].map(i=><div key={i} style={{width:5,height:5,borderRadius:1,background:"rgba(0,212,255,.4)",animation:`pulse 1.4s ${i*.2}s infinite`}}/>)}</div>}
+
+            {loading&&(
+              <div style={{display:"flex",gap:4,padding:"10px 13px",background:"#1c1c1e",borderRadius:"12px 12px 12px 2px",width:"fit-content",marginBottom:8}}>
+                {[0,1,2].map(i=><div key={i} style={{width:6,height:6,borderRadius:"50%",background:"#4b4b4b",animation:`pulse 1.4s ${i*.18}s infinite`}}/>)}
+              </div>
+            )}
             <div ref={endRef}/>
           </div>
-          <div style={{display:"flex",gap:7,padding:"10px 16px max(10px,env(safe-area-inset-bottom)) 16px",borderTop:"1px solid rgba(0,212,255,.08)",flexShrink:0,background:"rgba(0,8,20,.9)"}}>
-            <textarea value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send(input);}}} placeholder="Instrucao para J.A.R.V.I.S..." rows={1} style={{flex:1,background:"rgba(255,255,255,.06)",border:"1px solid rgba(0,212,255,.15)",borderRadius:3,padding:"10px 12px",color:"#f0f0f2",fontSize:16,resize:"none",outline:"none",fontFamily:"'Exo 2',sans-serif",lineHeight:1.4,maxHeight:100,overflowY:"auto"}}/>
-            <button onClick={()=>send(input)} disabled={loading||!input.trim()} style={{width:40,height:40,borderRadius:3,flexShrink:0,alignSelf:"flex-end",background:loading||!input.trim()?"rgba(0,212,255,.04)":"rgba(0,212,255,.15)",border:`1px solid ${loading||!input.trim()?"rgba(0,212,255,.1)":"rgba(0,212,255,.5)"}`,cursor:loading||!input.trim()?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .2s",boxShadow:loading||!input.trim()?"none":"0 0 10px rgba(0,212,255,.3)"}}>
-              <svg viewBox="0 0 24 24" fill="none" stroke={loading||!input.trim()?"rgba(0,212,255,.2)":"#00d4ff"} strokeWidth="2" style={{width:16,height:16}}><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+
+          <div style={{display:"flex",gap:8,padding:"10px 16px max(10px,env(safe-area-inset-bottom)) 16px",borderTop:"1px solid #1c1c1e",flexShrink:0}}>
+            <textarea value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send(input);}}} placeholder="Mensagem..." rows={1} style={{flex:1,background:"#1c1c1e",border:"none",borderRadius:10,padding:"10px 13px",color:"#f5f5f5",fontSize:16,resize:"none",outline:"none",fontFamily:"inherit",lineHeight:1.4,maxHeight:100,overflowY:"auto"}}/>
+            <button onClick={()=>send(input)} disabled={loading||!input.trim()} style={{width:40,height:40,borderRadius:10,flexShrink:0,alignSelf:"flex-end",background:loading||!input.trim()?"#1c1c1e":"#a78bfa",border:"none",cursor:loading||!input.trim()?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"background .2s"}}>
+              <svg viewBox="0 0 24 24" fill="none" stroke={loading||!input.trim()?"#4b4b4b":"#fff"} strokeWidth="2" style={{width:17,height:17}}><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
           </div>
         </>
