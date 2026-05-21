@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
 const SB_URL = "https://mxqxdlqywarwctljgttt.supabase.co";
 const SB_KEY = "sb_publishable_S8dPBgKqN65uSVcNfQnXCw_MSmpKoKX";
@@ -26,6 +26,37 @@ const fmtDT    = (iso) => new Date(iso).toLocaleString("pt-BR",{day:"2-digit",mo
 const fmtShort = (iso) => new Date(iso+"T12:00").toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"2-digit"});
 const t2m = (s) => { const [h,m]=s.split(":").map(Number); return h*60+m; };
 
+
+// ── SVG ICON SYSTEM ─────────────────────────────────────────────
+const _ICONS = {
+  sunrise:"M17 18a5 5 0 0 0-10 0M12 2v7M4.22 10.22l1.42 1.42M1 18h2M21 18h2M18.36 11.64l1.42-1.42",
+};
+function Icon({name,size=18,color}){
+  const paths={
+    sunrise: <svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/></svg>,
+    dumbbell:<svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><path d="M6.5 6.5h11M6.5 17.5h11M3 12h18"/><circle cx="4.5" cy="6.5" r="2"/><circle cx="19.5" cy="6.5" r="2"/><circle cx="4.5" cy="17.5" r="2"/><circle cx="19.5" cy="17.5" r="2"/></svg>,
+    book:   <svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>,
+    car:    <svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1l3-4h8l3 4h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="17.5" r="2.5"/></svg>,
+    hospital:<svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><line x1="12" y1="7" x2="12" y2="17"/><line x1="8" y1="12" x2="16" y2="12"/></svg>,
+    video:  <svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>,
+    users:  <svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+    trending:<svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
+    utensils:<svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><line x1="3" y1="2" x2="3" y2="22"/><path d="M7 2v6a3 3 0 0 1-6 0V2"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3v7"/></svg>,
+    zap:    <svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+    target: <svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>,
+    edit:   <svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
+    share:  <svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>,
+    check:  <svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><polyline points="20 6 9 17 4 12"/></svg>,
+    home:   <svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+    moon:   <svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>,
+    star:   <svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+    activity:<svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>,
+    dollar: <svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>,
+    user:   <svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{width:size,height:size}}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+  };
+  return paths[name]||<svg viewBox="0 0 24 24" fill="none" stroke={color||"currentColor"} strokeWidth="1.8" style={{width:size,height:size}}><circle cx="12" cy="12" r="10"/></svg>;
+}
+
 // ── PALETTE (from reference) ─────────────────────────────────────
 const P = {
   bg:      "#F4F5FB",
@@ -43,22 +74,22 @@ const P = {
 };
 
 const ROUTINE = [
-  {id:"r1", time:"04:50",label:"Despertar",          icon:"🌅",desc:"Água 500ml · Sem celular · Roupa separada",  cat:"Manhã"},
-  {id:"r2", time:"05:00",label:"Academia",            icon:"💪",desc:"90 min treino · Mente livre",               cat:"Manhã"},
-  {id:"r3", time:"06:30",label:"Café + Leitura",      icon:"📖",desc:"Banho · 1ª refeição · 10 min leitura",     cat:"Manhã"},
-  {id:"r4", time:"07:10",label:"Deslocamento",        icon:"🚗",desc:"Revisar pauta · Chegar 7h25",              cat:"Trabalho"},
-  {id:"r5", time:"07:30",label:"Abertura CentroMed",  icon:"🏥",desc:"Meta Ads · CPL · WhatsApp · Breno",       cat:"Trabalho"},
-  {id:"r6", time:"08:00",label:"Bloco Conteúdo",      icon:"🎬",desc:"Maria Eduarda · Aprovações · Gravações",   cat:"Trabalho"},
-  {id:"r7", time:"09:30",label:"Reunião Médicos",     icon:"⚕️",desc:"João Paulo · Mardônio · Larissa · CFM",   cat:"Trabalho"},
-  {id:"r8", time:"10:30",label:"Tráfego Pago",        icon:"📊",desc:"Frequência < 2,5x · CPL < R$4",           cat:"Trabalho"},
-  {id:"r9", time:"12:00",label:"Almoço",              icon:"🍽️",desc:"Refeição natural · Sem tela",             cat:"Nutrição"},
-  {id:"r10",time:"13:00",label:"Bloco UPMIND",        icon:"⚡",desc:"Clientes · Entregas · Pipeline",           cat:"UPMIND"},
-  {id:"r11",time:"14:30",label:"Estratégia UPMIND",   icon:"🧠",desc:"Mentoria · Newton · Copa 2026",            cat:"UPMIND"},
-  {id:"r12",time:"15:30",label:"Conteúdo Pessoal",    icon:"📱",desc:"1 conteúdo · Hook → CTA",                  cat:"Marca"},
-  {id:"r13",time:"16:30",label:"Presença Digital",    icon:"✨",desc:"DMs estratégicos · Story · Métricas",      cat:"Marca"},
-  {id:"r14",time:"17:00",label:"Review do Dia",       icon:"✅",desc:"Executado vs planejado · 3 prioridades",   cat:"Encerramento"},
-  {id:"r15",time:"17:30",label:"Jantar + Família",    icon:"🏠",desc:"Refeição natural · Família",               cat:"Nutrição"},
-  {id:"r16",time:"19:30",label:"Wind Down",           icon:"🌙",desc:"Última refeição · Dormir 21h30",           cat:"Encerramento"},
+  {id:"r1", time:"04:50",label:"Despertar",          icon:"sunrise", desc:"Água 500ml · Sem celular · Roupa separada",  cat:"Manhã"},
+  {id:"r2", time:"05:00",label:"Academia",            icon:"dumbbell",desc:"90 min treino · Mente livre",               cat:"Manhã"},
+  {id:"r3", time:"06:30",label:"Café + Leitura",      icon:"book",   desc:"Banho · 1ª refeição · 10 min leitura",     cat:"Manhã"},
+  {id:"r4", time:"07:10",label:"Deslocamento",        icon:"car",    desc:"Revisar pauta · Chegar 7h25",              cat:"Trabalho"},
+  {id:"r5", time:"07:30",label:"Abertura CentroMed",  icon:"hospital",desc:"Meta Ads · CPL · WhatsApp · Breno",       cat:"Trabalho"},
+  {id:"r6", time:"08:00",label:"Bloco Conteúdo",      icon:"video",  desc:"Maria Eduarda · Aprovações · Gravações",   cat:"Trabalho"},
+  {id:"r7", time:"09:30",label:"Reunião Médicos",     icon:"users",  desc:"João Paulo · Mardônio · Larissa · CFM",   cat:"Trabalho"},
+  {id:"r8", time:"10:30",label:"Tráfego Pago",        icon:"trending",desc:"Frequência < 2,5x · CPL < R$4",           cat:"Trabalho"},
+  {id:"r9", time:"12:00",label:"Almoço",              icon:"utensils",desc:"Refeição natural · Sem tela",             cat:"Nutrição"},
+  {id:"r10",time:"13:00",label:"Bloco UPMIND",        icon:"zap",    desc:"Clientes · Entregas · Pipeline",           cat:"UPMIND"},
+  {id:"r11",time:"14:30",label:"Estratégia UPMIND",   icon:"target", desc:"Mentoria · Newton · Copa 2026",            cat:"UPMIND"},
+  {id:"r12",time:"15:30",label:"Conteúdo Pessoal",    icon:"edit",   desc:"1 conteúdo · Hook → CTA",                  cat:"Marca"},
+  {id:"r13",time:"16:30",label:"Presença Digital",    icon:"share",  desc:"DMs estratégicos · Story · Métricas",      cat:"Marca"},
+  {id:"r14",time:"17:00",label:"Review do Dia",       icon:"check",  desc:"Executado vs planejado · 3 prioridades",   cat:"Encerramento"},
+  {id:"r15",time:"17:30",label:"Jantar + Família",    icon:"home",   desc:"Refeição natural · Família",               cat:"Nutrição"},
+  {id:"r16",time:"19:30",label:"Wind Down",           icon:"moon",   desc:"Última refeição · Dormir 21h30",           cat:"Encerramento"},
 ];
 
 const CAT_COLOR = {
@@ -75,7 +106,7 @@ const META_COLORS = {
   UPMIND:"#6C63FF",CentroMed:"#4DA6FF","Marca Pessoal":"#FF6584",
   Saúde:"#4CAF82",Financeiro:"#FFB830",Leitura:"#FF8C42",Pessoal:"#8F92A1"
 };
-const META_ICONS = {UPMIND:"⚡",CentroMed:"🏥","Marca Pessoal":"✨",Saúde:"💪",Financeiro:"💰",Leitura:"📖",Pessoal:"🌱"};
+const META_ICONS = {UPMIND:"zap",CentroMed:"hospital","Marca Pessoal":"star",Saúde:"activity",Financeiro:"dollar",Leitura:"book",Pessoal:"user"};
 const TAG_COLORS  = {UPMIND:"#6C63FF",CentroMed:"#4DA6FF",Marca:"#FF6584",Corpo:"#4CAF82",Pausa:"#8F92A1",Encerramento:"#FFB830"};
 
 function askNotif(){if("Notification" in window&&Notification.permission==="default")Notification.requestPermission();}
@@ -442,8 +473,8 @@ function HomeTab({setTab,tarefas,metas,checked,progress,done,current,nextItem,no
           <SLabel>Próxima missão</SLabel>
           <div style={{margin:"0 20px"}} onClick={()=>setTab("rotina")}>
             <Card style={{display:"flex",alignItems:"center",gap:14,cursor:"pointer"}}>
-              <div style={{width:46,height:46,borderRadius:12,background:CAT_COLOR[nextItem.cat]?.bg||`${P.accent}18`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>
-                {nextItem.icon}
+              <div style={{width:46,height:46,borderRadius:12,background:CAT_COLOR[nextItem.cat]?.bg||`${P.accent}18`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                <Icon name={nextItem.icon} size={22} color={CAT_COLOR[nextItem.cat]?.text||P.accent}/>
               </div>
               <div style={{flex:1,minWidth:0}}>
                 <div style={{fontSize:14,fontWeight:600,color:P.text}}>{nextItem.label}</div>
@@ -525,7 +556,7 @@ function RotinaTab({checked,toggleCheck}){
                 {ck&&<svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" style={{width:12,height:12}}><polyline points="20 6 9 17 4 12"/></svg>}
               </div>
               {/* Icon */}
-              <div style={{width:38,height:38,borderRadius:10,background:cc.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{item.icon}</div>
+              <div style={{width:38,height:38,borderRadius:10,background:cc.bg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><Icon name={item.icon} size={20} color={cc.text}/></div>
               {/* Text */}
               <div style={{flex:1,minWidth:0}}>
                 <div style={{fontSize:13,fontWeight:600,color:ck?P.sub:P.text,textDecoration:ck?"line-through":"none",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{item.label}</div>
@@ -686,7 +717,7 @@ function MetasTab({metas,submetas,addMeta,updateMetaProgress,removeMeta,addSubme
           const cc=META_COLORS[c]||P.accent;
           return(
             <button key={c} onClick={()=>setSelCat(c)} style={{fontSize:11,fontWeight:a?600:500,padding:"5px 13px",borderRadius:20,whiteSpace:"nowrap",flexShrink:0,cursor:"pointer",border:"none",background:a?cc:`${P.text}08`,color:a?"#fff":P.sub,transition:"all .2s",boxShadow:a?`0 3px 10px ${cc}44`:"none"}}>
-              {META_ICONS[c]||""} {c}
+              {c}
             </button>
           );
         })}
@@ -760,7 +791,7 @@ function MCard({m,onPress,onProgress,onRemove,subCount,subDone}){
         <div style={{height:6,background:`linear-gradient(90deg,${c},${c}88)`}}/>
         <div style={{padding:"12px 12px 8px",position:"relative"}}>
           <button onClick={e=>{e.stopPropagation();onRemove(m.id);}} style={{position:"absolute",top:8,right:8,background:"none",border:"none",color:P.border,cursor:"pointer",fontSize:14,padding:0,lineHeight:1}}>×</button>
-          <div style={{fontSize:24,marginBottom:6}}>{META_ICONS[m.cat]||"🎯"}</div>
+          <div style={{width:32,height:32,marginBottom:6}}><Icon name={META_ICONS[m.cat]||"target"} size={28} color={c}/></div>
           <div style={{fontSize:12,fontWeight:600,color:m.done?P.sub:P.text,lineHeight:1.3,marginBottom:8,textDecoration:m.done?"line-through":"none",paddingRight:16}}>{m.title}</div>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:5}}>
             <span style={{fontSize:10,color:P.sub}}>{m.current_val}/{m.target}</span>
@@ -808,7 +839,7 @@ function MetaDetail({meta,onBack,onProgress,onRemove,submetas,addSubmeta,updateS
       {/* Header */}
       <div style={{margin:"4px 20px 0"}}>
         <Card style={{background:`linear-gradient(135deg,${c}18,${c}08)`}}>
-          <div style={{fontSize:36,marginBottom:8}}>{META_ICONS[meta.cat]||"🎯"}</div>
+          <div style={{width:40,height:40,marginBottom:8}}><Icon name={META_ICONS[meta.cat]||"target"} size={36} color={c}/></div>
           <div style={{fontSize:20,fontWeight:800,color:P.text,marginBottom:4}}>{meta.title}</div>
           {meta.descricao&&<div style={{fontSize:13,color:P.sub,marginBottom:10}}>{meta.descricao}</div>}
           <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
@@ -1007,7 +1038,17 @@ Mensagem: ${text}]`;
       const mr=new MediaRecorder(s);
       chunks.current=[];
       mr.ondataavailable=e=>chunks.current.push(e.data);
-      mr.onstop=()=>{s.getTracks().forEach(t=>t.stop());setRec(false);toast2("Áudio registrado");};
+      mr.onstop=async()=>{
+        s.getTracks().forEach(t=>t.stop());
+        setRec(false);
+        // Transcribe or save as note
+        const blob=new Blob(chunks.current,{type:"audio/webm"});
+        const dur=Math.round(blob.size/1000);
+        const noteText=`[Áudio gravado às ${new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})} · ${dur}kb]`;
+        setText(p=>p?p+"
+"+noteText:noteText);
+        toast2("Áudio registrado — edite e salve");
+      };
       mr.start();mediaRef.current=mr;setRec(true);
     }catch{toast2("Microfone bloqueado",true);}
   };
